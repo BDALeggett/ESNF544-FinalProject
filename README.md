@@ -15,7 +15,10 @@ This project follows a structured machine learning pipeline:
    - The raw images of Pokémon cards are processed to extract only the relevant card region.
    - Multiple discriminative features are calculated from each image. These include measures of border continuity, corner quality, centering, inner cleanliness, grading index (with bias based on expected grade), edge density, saturation variance, and additional texture or color consistency features.
    - The resulting feature vectors are cleaned (columns with insufficient valid data are removed) and saved as a compressed NumPy archive.
+   - Manually went through and removed any outlier cards that the automated process didn't handle.
+   - Manually cut down overwhelming grades 10, 9 and 8 cards to decrease the bais for those classes.  
 
+    
 2. **Model Training & Evaluation:**  
    - The saved features are loaded and used to train classifiers on a 4-class problem:
      - Class 0: Cards graded ≤7
