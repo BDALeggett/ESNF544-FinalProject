@@ -1,3 +1,5 @@
+# Used to collect a raw dataset of cards and their official grades
+
 import os
 import re
 import time
@@ -108,7 +110,7 @@ def scrape_all_pages_selenium(base_url, output_dir="ENSF 544\Final-Project\data\
     driver.quit()
 
 if __name__ == "__main__":
-    # Replace this base_url with the actual URL for page 1 of your target site.
+    
     base_url = (
         "https://www.fanaticscollect.com/weekly-auction?%22%22category=Trading+Card+Games+%3E+Pok%C3%A9mon+(English),%22%22Trading+Card+Games+%3E+Pok%C3%A9mon+(Japanese),%22%22Trading+Card+Games+%3E+Pok%C3%A9mon+(Other+Languages)%22%22&type=WEEKLY&grade=0,10&page=1&category=Trading+Card+Games+%3E+Pok%C3%A9mon+(English),Trading+Card+Games+%3E+Pok%C3%A9mon+(Japanese)"
     )
