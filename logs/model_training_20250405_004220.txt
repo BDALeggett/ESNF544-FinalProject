@@ -1,0 +1,1219 @@
+2025-04-05 00:42:20,994 - INFO - Logging to file: logs/model_training_20250405_004220.txt
+2025-04-05 00:42:20,995 - INFO - Loaded dataset: X.shape=(328, 7), y.shape=(328,)
+2025-04-05 00:42:20,995 - INFO - Starting model training and evaluation process
+Model training progress:   0%|                                                                                        | 0/3 [00:00<?, ?it/s]2025-04-05 00:42:20,998 - INFO - Tuning Logistic Regression...
+2025-04-05 00:42:20,999 - INFO - Starting LogisticRegression tuning: 5 total fits
+2025-04-05 00:42:20,999 - INFO - Hyperparameter search for LogisticRegression: fitting 5 folds for 1 candidates
+
+Tuning LogisticRegression:   0%|                                                                                      | 0/5 [00:00<?, ?it/s][A
+
+GridSearchCV (LogisticRegression):   0%|                                                                              | 0/1 [00:00<?, ?it/s][A[AFitting 5 folds for each of 1 candidates, totalling 5 fits
+
+
+GridSearchCV (LogisticRegression): 100%|######################################################################| 1/1 [00:01<00:00,  1.64s/it][A[AGridSearchCV (LogisticRegression): 100%|######################################################################| 1/1 [00:01<00:00,  1.64s/it]
+Tuning LogisticRegression:   0%|                                                                                      | 0/5 [00:01<?, ?it/s]
+2025-04-05 00:42:22,638 - INFO - Completed LogisticRegression tuning in 1.6 seconds
+2025-04-05 00:42:22,639 - INFO - Best params for LogisticRegression: {'C': 0.001, 'multi_class': 'ovr', 'solver': 'lbfgs'}
+2025-04-05 00:42:22,639 - INFO - Best f1_macro score: 0.313
+2025-04-05 00:42:22,639 - INFO - Starting LogisticRegression tuning: 5 total fits
+2025-04-05 00:42:22,640 - INFO - Hyperparameter search for LogisticRegression: fitting 5 folds for 1 candidates
+
+Tuning LogisticRegression:   0%|                                                                                      | 0/5 [00:00<?, ?it/s][A
+
+GridSearchCV (LogisticRegression):   0%|                                                                              | 0/1 [00:00<?, ?it/s][A[AFitting 5 folds for each of 1 candidates, totalling 5 fits
+
+
+GridSearchCV (LogisticRegression): 100%|######################################################################| 1/1 [00:01<00:00,  1.02s/it][A[AGridSearchCV (LogisticRegression): 100%|######################################################################| 1/1 [00:01<00:00,  1.02s/it]
+Tuning LogisticRegression:   0%|                                                                                      | 0/5 [00:01<?, ?it/s]
+2025-04-05 00:42:23,658 - INFO - Completed LogisticRegression tuning in 1.0 seconds
+2025-04-05 00:42:23,658 - INFO - Best params for LogisticRegression: {'C': 0.001, 'multi_class': 'ovr', 'solver': 'liblinear'}
+2025-04-05 00:42:23,658 - INFO - Best f1_macro score: 0.265
+Model training progress:  33%|##########################6                                                     | 1/3 [00:02<00:05,  2.66s/it]2025-04-05 00:42:23,659 - INFO - Tuning Random Forest...
+2025-04-05 00:42:23,659 - INFO - Starting RandomForestClassifier tuning: 5 total fits
+2025-04-05 00:42:23,659 - INFO - Hyperparameter search for RandomForestClassifier: fitting 5 folds for 1 candidates
+
+Tuning RandomForestClassifier:   0%|                                                                                  | 0/5 [00:00<?, ?it/s][A
+
+GridSearchCV (RandomForestClassifier):   0%|                                                                          | 0/1 [00:00<?, ?it/s][A[AFitting 5 folds for each of 1 candidates, totalling 5 fits
+
+
+GridSearchCV (RandomForestClassifier): 100%|##################################################################| 1/1 [00:02<00:00,  2.62s/it][A[AGridSearchCV (RandomForestClassifier): 100%|##################################################################| 1/1 [00:02<00:00,  2.62s/it]
+Tuning RandomForestClassifier:   0%|                                                                                  | 0/5 [00:02<?, ?it/s]
+2025-04-05 00:42:26,278 - INFO - Completed RandomForestClassifier tuning in 2.6 seconds
+2025-04-05 00:42:26,278 - INFO - Best params for RandomForestClassifier: {'criterion': 'entropy', 'max_depth': 10, 'max_features': None, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 600}
+2025-04-05 00:42:26,278 - INFO - Best f1_macro score: 0.379
+Model training progress:  67%|#####################################################3                          | 2/3 [00:05<00:02,  2.64s/it]2025-04-05 00:42:26,280 - INFO - Tuning SVM...
+2025-04-05 00:42:26,280 - INFO - Starting SVC tuning: 5 total fits
+2025-04-05 00:42:26,280 - INFO - Hyperparameter search for SVC: fitting 5 folds for 1 candidates
+
+Tuning SVC:   0%|                                                                                                     | 0/5 [00:00<?, ?it/s][A
+
+GridSearchCV (SVC):   0%|                                                                                             | 0/1 [00:00<?, ?it/s][A[AFitting 5 folds for each of 1 candidates, totalling 5 fits
+
+
+GridSearchCV (SVC): 100%|#####################################################################################| 1/1 [00:00<00:00,  9.16it/s][A[AGridSearchCV (SVC): 100%|#####################################################################################| 1/1 [00:00<00:00,  9.08it/s]
+Tuning SVC:   0%|                                                                                                     | 0/5 [00:00<?, ?it/s]
+2025-04-05 00:42:26,393 - INFO - Completed SVC tuning in 0.1 seconds
+2025-04-05 00:42:26,393 - INFO - Best params for SVC: {'C': 10, 'gamma': 1, 'kernel': 'rbf'}
+2025-04-05 00:42:26,393 - INFO - Best f1_macro score: 0.369
+Model training progress: 100%|################################################################################| 3/3 [00:05<00:00,  1.49s/it]Model training progress: 100%|################################################################################| 3/3 [00:05<00:00,  1.80s/it]
+2025-04-05 00:42:26,394 - INFO - Finding best resampling method for Logistic Regression
+Testing resampling methods (LogisticRegression):   0%|                                                                | 0/4 [00:00<?, ?it/s]2025-04-05 00:42:26,395 - INFO - Testing resampling method: smote
+
+Cross-validation (LogisticRegression):   0%|                                                                          | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:26,401 - INFO - Applied smote resampling, new shape: (300, 7)
+2025-04-05 00:42:26,402 - INFO - Fitting fold 1/3 for LogisticRegression
+2025-04-05 00:42:26,407 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,412 - INFO - Fold 1 Accuracy: 0.245
+2025-04-05 00:42:26,412 - INFO - Fold 1 Macro F1: 0.226
+2025-04-05 00:42:26,412 - INFO - Fold 1 Macro Precision: 0.239
+2025-04-05 00:42:26,412 - INFO - Fold 1 Macro Recall: 0.227
+2025-04-05 00:42:26,416 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.27      0.31      0.29        29
+           1       0.27      0.32      0.29        37
+           2       0.14      0.14      0.14        21
+           3       0.27      0.13      0.18        23
+
+    accuracy                           0.25       110
+   macro avg       0.24      0.23      0.23       110
+weighted avg       0.25      0.25      0.24       110
+
+
+Cross-validation (LogisticRegression):  33%|###############                              | 1/3 [00:00<00:00, 40.73it/s, acc=0.245, f1=0.226][A2025-04-05 00:42:26,423 - INFO - Applied smote resampling, new shape: (300, 7)
+2025-04-05 00:42:26,424 - INFO - Fitting fold 2/3 for LogisticRegression
+2025-04-05 00:42:26,430 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,434 - INFO - Fold 2 Accuracy: 0.284
+2025-04-05 00:42:26,434 - INFO - Fold 2 Macro F1: 0.262
+2025-04-05 00:42:26,434 - INFO - Fold 2 Macro Precision: 0.267
+2025-04-05 00:42:26,435 - INFO - Fold 2 Macro Recall: 0.279
+2025-04-05 00:42:26,441 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.29      0.50      0.37        28
+           1       0.30      0.19      0.23        37
+           2       0.06      0.05      0.06        20
+           3       0.41      0.38      0.39        24
+
+    accuracy                           0.28       109
+   macro avg       0.27      0.28      0.26       109
+weighted avg       0.28      0.28      0.27       109
+
+
+Cross-validation (LogisticRegression):  67%|##############################               | 2/3 [00:00<00:00, 42.53it/s, acc=0.284, f1=0.262][A2025-04-05 00:42:26,446 - INFO - Applied smote resampling, new shape: (296, 7)
+2025-04-05 00:42:26,447 - INFO - Fitting fold 3/3 for LogisticRegression
+2025-04-05 00:42:26,454 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,459 - INFO - Fold 3 Accuracy: 0.339
+2025-04-05 00:42:26,459 - INFO - Fold 3 Macro F1: 0.337
+2025-04-05 00:42:26,460 - INFO - Fold 3 Macro Precision: 0.338
+2025-04-05 00:42:26,460 - INFO - Fold 3 Macro Recall: 0.342
+2025-04-05 00:42:26,464 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.33      0.39      0.36        28
+           1       0.39      0.29      0.33        38
+           2       0.21      0.25      0.23        20
+           3       0.42      0.43      0.43        23
+
+    accuracy                           0.34       109
+   macro avg       0.34      0.34      0.34       109
+weighted avg       0.35      0.34      0.34       109
+
+
+Cross-validation (LogisticRegression): 100%|#############################################| 3/3 [00:00<00:00, 43.39it/s, acc=0.339, f1=0.337][ACross-validation (LogisticRegression): 100%|#############################################| 3/3 [00:00<00:00, 43.39it/s, acc=0.339, f1=0.337]
+2025-04-05 00:42:26,466 - INFO - smote evaluation completed in 0.1 seconds
+2025-04-05 00:42:26,466 - INFO - smote => Accuracy: 0.290, F1: 0.275
+Testing resampling methods (LogisticRegression):  25%|########                        | 1/4 [00:00<00:00, 14.05it/s, method=smote, f1=0.275]2025-04-05 00:42:26,466 - INFO - Testing resampling method: adasyn
+
+Cross-validation (LogisticRegression):   0%|                                                                          | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:26,476 - INFO - Applied adasyn resampling, new shape: (298, 7)
+2025-04-05 00:42:26,481 - INFO - Fitting fold 1/3 for LogisticRegression
+2025-04-05 00:42:26,488 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,493 - INFO - Fold 1 Accuracy: 0.291
+2025-04-05 00:42:26,493 - INFO - Fold 1 Macro F1: 0.261
+2025-04-05 00:42:26,494 - INFO - Fold 1 Macro Precision: 0.272
+2025-04-05 00:42:26,494 - INFO - Fold 1 Macro Recall: 0.266
+2025-04-05 00:42:26,498 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.28      0.17      0.21        29
+           1       0.33      0.49      0.39        37
+           2       0.17      0.14      0.15        21
+           3       0.32      0.26      0.29        23
+
+    accuracy                           0.29       110
+   macro avg       0.27      0.27      0.26       110
+weighted avg       0.28      0.29      0.28       110
+
+
+Cross-validation (LogisticRegression):  33%|###############                              | 1/3 [00:00<00:00, 29.57it/s, acc=0.291, f1=0.261][A2025-04-05 00:42:26,504 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:26,504 - WARNING - Proceeding without resampling for fold 2
+2025-04-05 00:42:26,505 - INFO - Fitting fold 2/3 for LogisticRegression
+2025-04-05 00:42:26,509 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,513 - INFO - Fold 2 Accuracy: 0.330
+2025-04-05 00:42:26,514 - INFO - Fold 2 Macro F1: 0.298
+2025-04-05 00:42:26,514 - INFO - Fold 2 Macro Precision: 0.289
+2025-04-05 00:42:26,514 - INFO - Fold 2 Macro Recall: 0.309
+2025-04-05 00:42:26,519 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.29      0.36      0.32        28
+           1       0.39      0.38      0.38        37
+           2       0.00      0.00      0.00        20
+           3       0.48      0.50      0.49        24
+
+    accuracy                           0.33       109
+   macro avg       0.29      0.31      0.30       109
+weighted avg       0.31      0.33      0.32       109
+
+
+Cross-validation (LogisticRegression):  67%|##############################               | 2/3 [00:00<00:00, 36.49it/s, acc=0.330, f1=0.298][A2025-04-05 00:42:26,525 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:26,525 - WARNING - Proceeding without resampling for fold 3
+2025-04-05 00:42:26,526 - INFO - Fitting fold 3/3 for LogisticRegression
+2025-04-05 00:42:26,531 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,534 - INFO - Fold 3 Accuracy: 0.312
+2025-04-05 00:42:26,534 - INFO - Fold 3 Macro F1: 0.298
+2025-04-05 00:42:26,535 - INFO - Fold 3 Macro Precision: 0.297
+2025-04-05 00:42:26,535 - INFO - Fold 3 Macro Recall: 0.299
+2025-04-05 00:42:26,538 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.26      0.29      0.27        28
+           1       0.39      0.37      0.38        38
+           2       0.17      0.15      0.16        20
+           3       0.38      0.39      0.38        23
+
+    accuracy                           0.31       109
+   macro avg       0.30      0.30      0.30       109
+weighted avg       0.31      0.31      0.31       109
+
+
+Cross-validation (LogisticRegression): 100%|#############################################| 3/3 [00:00<00:00, 41.05it/s, acc=0.312, f1=0.298][ACross-validation (LogisticRegression): 100%|#############################################| 3/3 [00:00<00:00, 40.48it/s, acc=0.312, f1=0.298]
+2025-04-05 00:42:26,541 - INFO - adasyn evaluation completed in 0.1 seconds
+2025-04-05 00:42:26,541 - INFO - adasyn => Accuracy: 0.311, F1: 0.285
+Testing resampling methods (LogisticRegression):  50%|################                | 2/4 [00:00<00:00, 13.58it/s, method=smote, f1=0.275]Testing resampling methods (LogisticRegression):  50%|###############5               | 2/4 [00:00<00:00, 13.58it/s, method=adasyn, f1=0.285]2025-04-05 00:42:26,542 - INFO - Testing resampling method: smotetomek
+
+Cross-validation (LogisticRegression):   0%|                                                                          | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:26,550 - INFO - Applied smotetomek resampling, new shape: (262, 7)
+2025-04-05 00:42:26,551 - INFO - Fitting fold 1/3 for LogisticRegression
+2025-04-05 00:42:26,556 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,560 - INFO - Fold 1 Accuracy: 0.273
+2025-04-05 00:42:26,560 - INFO - Fold 1 Macro F1: 0.250
+2025-04-05 00:42:26,561 - INFO - Fold 1 Macro Precision: 0.266
+2025-04-05 00:42:26,561 - INFO - Fold 1 Macro Recall: 0.252
+2025-04-05 00:42:26,566 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.27      0.31      0.29        29
+           1       0.31      0.38      0.34        37
+           2       0.18      0.19      0.19        21
+           3       0.30      0.13      0.18        23
+
+    accuracy                           0.27       110
+   macro avg       0.27      0.25      0.25       110
+weighted avg       0.27      0.27      0.26       110
+
+
+Cross-validation (LogisticRegression):  33%|###############                              | 1/3 [00:00<00:00, 41.29it/s, acc=0.273, f1=0.250][A2025-04-05 00:42:26,573 - INFO - Applied smotetomek resampling, new shape: (254, 7)
+2025-04-05 00:42:26,574 - INFO - Fitting fold 2/3 for LogisticRegression
+2025-04-05 00:42:26,579 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,584 - INFO - Fold 2 Accuracy: 0.294
+2025-04-05 00:42:26,585 - INFO - Fold 2 Macro F1: 0.280
+2025-04-05 00:42:26,585 - INFO - Fold 2 Macro Precision: 0.282
+2025-04-05 00:42:26,585 - INFO - Fold 2 Macro Recall: 0.296
+2025-04-05 00:42:26,589 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.28      0.46      0.35        28
+           1       0.25      0.16      0.20        37
+           2       0.14      0.10      0.12        20
+           3       0.46      0.46      0.46        24
+
+    accuracy                           0.29       109
+   macro avg       0.28      0.30      0.28       109
+weighted avg       0.28      0.29      0.28       109
+
+
+Cross-validation (LogisticRegression):  67%|##############################               | 2/3 [00:00<00:00, 42.57it/s, acc=0.294, f1=0.280][A2025-04-05 00:42:26,595 - INFO - Applied smotetomek resampling, new shape: (248, 7)
+2025-04-05 00:42:26,596 - INFO - Fitting fold 3/3 for LogisticRegression
+2025-04-05 00:42:26,601 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,605 - INFO - Fold 3 Accuracy: 0.349
+2025-04-05 00:42:26,605 - INFO - Fold 3 Macro F1: 0.345
+2025-04-05 00:42:26,606 - INFO - Fold 3 Macro Precision: 0.355
+2025-04-05 00:42:26,606 - INFO - Fold 3 Macro Recall: 0.346
+2025-04-05 00:42:26,609 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.32      0.43      0.36        28
+           1       0.44      0.32      0.37        38
+           2       0.21      0.25      0.23        20
+           3       0.45      0.39      0.42        23
+
+    accuracy                           0.35       109
+   macro avg       0.35      0.35      0.34       109
+weighted avg       0.37      0.35      0.35       109
+
+
+Cross-validation (LogisticRegression): 100%|#############################################| 3/3 [00:00<00:00, 43.24it/s, acc=0.349, f1=0.345][ACross-validation (LogisticRegression): 100%|#############################################| 3/3 [00:00<00:00, 43.07it/s, acc=0.349, f1=0.345]
+2025-04-05 00:42:26,613 - INFO - smotetomek evaluation completed in 0.1 seconds
+2025-04-05 00:42:26,613 - INFO - smotetomek => Accuracy: 0.305, F1: 0.291
+Testing resampling methods (LogisticRegression):  75%|####################2      | 3/4 [00:00<00:00, 13.58it/s, method=smotetomek, f1=0.291]2025-04-05 00:42:26,614 - INFO - Testing resampling method: none
+
+Cross-validation (LogisticRegression):   0%|                                                                          | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:26,615 - INFO - Fitting fold 1/3 for LogisticRegression
+2025-04-05 00:42:26,621 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,624 - INFO - Fold 1 Accuracy: 0.291
+2025-04-05 00:42:26,625 - INFO - Fold 1 Macro F1: 0.246
+2025-04-05 00:42:26,625 - INFO - Fold 1 Macro Precision: 0.255
+2025-04-05 00:42:26,625 - INFO - Fold 1 Macro Recall: 0.255
+2025-04-05 00:42:26,628 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.30      0.21      0.24        29
+           1       0.36      0.54      0.43        37
+           2       0.15      0.14      0.15        21
+           3       0.21      0.13      0.16        23
+
+    accuracy                           0.29       110
+   macro avg       0.26      0.26      0.25       110
+weighted avg       0.27      0.29      0.27       110
+
+
+Cross-validation (LogisticRegression):  33%|###############                              | 1/3 [00:00<00:00, 61.41it/s, acc=0.291, f1=0.246][A2025-04-05 00:42:26,632 - INFO - Fitting fold 2/3 for LogisticRegression
+2025-04-05 00:42:26,637 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,641 - INFO - Fold 2 Accuracy: 0.330
+2025-04-05 00:42:26,641 - INFO - Fold 2 Macro F1: 0.298
+2025-04-05 00:42:26,641 - INFO - Fold 2 Macro Precision: 0.289
+2025-04-05 00:42:26,642 - INFO - Fold 2 Macro Recall: 0.309
+2025-04-05 00:42:26,645 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.29      0.36      0.32        28
+           1       0.39      0.38      0.38        37
+           2       0.00      0.00      0.00        20
+           3       0.48      0.50      0.49        24
+
+    accuracy                           0.33       109
+   macro avg       0.29      0.31      0.30       109
+weighted avg       0.31      0.33      0.32       109
+
+
+Cross-validation (LogisticRegression):  67%|##############################               | 2/3 [00:00<00:00, 59.83it/s, acc=0.330, f1=0.298][A2025-04-05 00:42:26,648 - INFO - Fitting fold 3/3 for LogisticRegression
+2025-04-05 00:42:26,654 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:26,657 - INFO - Fold 3 Accuracy: 0.312
+2025-04-05 00:42:26,658 - INFO - Fold 3 Macro F1: 0.298
+2025-04-05 00:42:26,658 - INFO - Fold 3 Macro Precision: 0.297
+2025-04-05 00:42:26,658 - INFO - Fold 3 Macro Recall: 0.299
+2025-04-05 00:42:26,661 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.26      0.29      0.27        28
+           1       0.39      0.37      0.38        38
+           2       0.17      0.15      0.16        20
+           3       0.38      0.39      0.38        23
+
+    accuracy                           0.31       109
+   macro avg       0.30      0.30      0.30       109
+weighted avg       0.31      0.31      0.31       109
+
+
+Cross-validation (LogisticRegression): 100%|#############################################| 3/3 [00:00<00:00, 59.36it/s, acc=0.312, f1=0.298][ACross-validation (LogisticRegression): 100%|#############################################| 3/3 [00:00<00:00, 59.36it/s, acc=0.312, f1=0.298]
+2025-04-05 00:42:26,665 - INFO - none evaluation completed in 0.1 seconds
+2025-04-05 00:42:26,665 - INFO - none => Accuracy: 0.311, F1: 0.280
+Testing resampling methods (LogisticRegression): 100%|###########################| 4/4 [00:00<00:00, 14.96it/s, method=smotetomek, f1=0.291]Testing resampling methods (LogisticRegression): 100%|#################################| 4/4 [00:00<00:00, 14.96it/s, method=none, f1=0.291]Testing resampling methods (LogisticRegression): 100%|#################################| 4/4 [00:00<00:00, 14.73it/s, method=none, f1=0.291]
+2025-04-05 00:42:26,667 - INFO - Best resampling method: smotetomek with F1: 0.291
+2025-04-05 00:42:26,667 - INFO - Finding best resampling method for Random Forest
+Testing resampling methods (RandomForestClassifier):   0%|                                                            | 0/4 [00:00<?, ?it/s]2025-04-05 00:42:26,668 - INFO - Testing resampling method: smote
+
+Cross-validation (RandomForestClassifier):   0%|                                                                      | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:26,672 - INFO - Applied smote resampling, new shape: (300, 7)
+2025-04-05 00:42:26,672 - INFO - Fitting fold 1/3 for RandomForestClassifier
+2025-04-05 00:42:27,705 - INFO - Fold 1 fitting completed in 1.0 seconds
+2025-04-05 00:42:27,735 - INFO - Fold 1 Accuracy: 0.373
+2025-04-05 00:42:27,736 - INFO - Fold 1 Macro F1: 0.351
+2025-04-05 00:42:27,736 - INFO - Fold 1 Macro Precision: 0.349
+2025-04-05 00:42:27,737 - INFO - Fold 1 Macro Recall: 0.358
+2025-04-05 00:42:27,741 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.38      0.45      0.41        29
+           1       0.42      0.41      0.41        37
+           2       0.21      0.14      0.17        21
+           3       0.38      0.43      0.41        23
+
+    accuracy                           0.37       110
+   macro avg       0.35      0.36      0.35       110
+weighted avg       0.36      0.37      0.37       110
+
+
+Cross-validation (RandomForestClassifier):  33%|####################6                                         | 1/3 [00:01<00:02,  1.07s/it][A
+Cross-validation (RandomForestClassifier):  33%|#############6                           | 1/3 [00:01<00:02,  1.07s/it, acc=0.373, f1=0.351][A2025-04-05 00:42:27,747 - INFO - Applied smote resampling, new shape: (300, 7)
+2025-04-05 00:42:27,747 - INFO - Fitting fold 2/3 for RandomForestClassifier
+2025-04-05 00:42:28,744 - INFO - Fold 2 fitting completed in 1.0 seconds
+2025-04-05 00:42:28,774 - INFO - Fold 2 Accuracy: 0.349
+2025-04-05 00:42:28,775 - INFO - Fold 2 Macro F1: 0.342
+2025-04-05 00:42:28,775 - INFO - Fold 2 Macro Precision: 0.348
+2025-04-05 00:42:28,775 - INFO - Fold 2 Macro Recall: 0.339
+2025-04-05 00:42:28,780 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.35      0.29      0.31        28
+           1       0.41      0.41      0.41        37
+           2       0.19      0.25      0.21        20
+           3       0.45      0.42      0.43        24
+
+    accuracy                           0.35       109
+   macro avg       0.35      0.34      0.34       109
+weighted avg       0.36      0.35      0.35       109
+
+
+Cross-validation (RandomForestClassifier):  67%|###########################3             | 2/3 [00:02<00:01,  1.05s/it, acc=0.373, f1=0.351][A
+Cross-validation (RandomForestClassifier):  67%|###########################3             | 2/3 [00:02<00:01,  1.05s/it, acc=0.349, f1=0.342][A2025-04-05 00:42:28,786 - INFO - Applied smote resampling, new shape: (296, 7)
+2025-04-05 00:42:28,787 - INFO - Fitting fold 3/3 for RandomForestClassifier
+2025-04-05 00:42:29,942 - INFO - Fold 3 fitting completed in 1.2 seconds
+2025-04-05 00:42:29,971 - INFO - Fold 3 Accuracy: 0.376
+2025-04-05 00:42:29,971 - INFO - Fold 3 Macro F1: 0.371
+2025-04-05 00:42:29,971 - INFO - Fold 3 Macro Precision: 0.378
+2025-04-05 00:42:29,972 - INFO - Fold 3 Macro Recall: 0.371
+2025-04-05 00:42:29,975 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.31      0.32      0.32        28
+           1       0.50      0.42      0.46        38
+           2       0.25      0.35      0.29        20
+           3       0.45      0.39      0.42        23
+
+    accuracy                           0.38       109
+   macro avg       0.38      0.37      0.37       109
+weighted avg       0.39      0.38      0.38       109
+
+
+Cross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:03<00:00,  1.12s/it, acc=0.349, f1=0.342][A
+Cross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:03<00:00,  1.12s/it, acc=0.376, f1=0.371][ACross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:03<00:00,  1.10s/it, acc=0.376, f1=0.371]
+2025-04-05 00:42:29,978 - INFO - smote evaluation completed in 3.3 seconds
+2025-04-05 00:42:29,979 - INFO - smote => Accuracy: 0.366, F1: 0.354
+Testing resampling methods (RandomForestClassifier):  25%|#############                                       | 1/4 [00:03<00:09,  3.31s/it]Testing resampling methods (RandomForestClassifier):  25%|#######                     | 1/4 [00:03<00:09,  3.31s/it, method=smote, f1=0.354]2025-04-05 00:42:29,979 - INFO - Testing resampling method: adasyn
+
+Cross-validation (RandomForestClassifier):   0%|                                                                      | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:29,986 - INFO - Applied adasyn resampling, new shape: (298, 7)
+2025-04-05 00:42:29,988 - INFO - Fitting fold 1/3 for RandomForestClassifier
+2025-04-05 00:42:31,126 - INFO - Fold 1 fitting completed in 1.1 seconds
+2025-04-05 00:42:31,183 - INFO - Fold 1 Accuracy: 0.400
+2025-04-05 00:42:31,183 - INFO - Fold 1 Macro F1: 0.381
+2025-04-05 00:42:31,183 - INFO - Fold 1 Macro Precision: 0.386
+2025-04-05 00:42:31,183 - INFO - Fold 1 Macro Recall: 0.391
+2025-04-05 00:42:31,190 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.41      0.52      0.45        29
+           1       0.45      0.38      0.41        37
+           2       0.31      0.19      0.24        21
+           3       0.38      0.48      0.42        23
+
+    accuracy                           0.40       110
+   macro avg       0.39      0.39      0.38       110
+weighted avg       0.40      0.40      0.39       110
+
+
+Cross-validation (RandomForestClassifier):  33%|####################6                                         | 1/3 [00:01<00:02,  1.21s/it][A
+Cross-validation (RandomForestClassifier):  33%|#############6                           | 1/3 [00:01<00:02,  1.21s/it, acc=0.400, f1=0.381][A2025-04-05 00:42:31,195 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:31,195 - WARNING - Proceeding without resampling for fold 2
+2025-04-05 00:42:31,196 - INFO - Fitting fold 2/3 for RandomForestClassifier
+2025-04-05 00:42:32,211 - INFO - Fold 2 fitting completed in 1.0 seconds
+2025-04-05 00:42:32,241 - INFO - Fold 2 Accuracy: 0.404
+2025-04-05 00:42:32,242 - INFO - Fold 2 Macro F1: 0.380
+2025-04-05 00:42:32,242 - INFO - Fold 2 Macro Precision: 0.380
+2025-04-05 00:42:32,243 - INFO - Fold 2 Macro Recall: 0.382
+2025-04-05 00:42:32,246 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.36      0.32      0.34        28
+           1       0.44      0.51      0.47        37
+           2       0.18      0.15      0.16        20
+           3       0.54      0.54      0.54        24
+
+    accuracy                           0.40       109
+   macro avg       0.38      0.38      0.38       109
+weighted avg       0.39      0.40      0.40       109
+
+
+Cross-validation (RandomForestClassifier):  67%|###########################3             | 2/3 [00:02<00:01,  1.12s/it, acc=0.400, f1=0.381][A
+Cross-validation (RandomForestClassifier):  67%|###########################3             | 2/3 [00:02<00:01,  1.12s/it, acc=0.404, f1=0.380][A2025-04-05 00:42:32,250 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:32,250 - WARNING - Proceeding without resampling for fold 3
+2025-04-05 00:42:32,251 - INFO - Fitting fold 3/3 for RandomForestClassifier
+2025-04-05 00:42:33,067 - INFO - Fold 3 fitting completed in 0.8 seconds
+2025-04-05 00:42:33,099 - INFO - Fold 3 Accuracy: 0.385
+2025-04-05 00:42:33,099 - INFO - Fold 3 Macro F1: 0.377
+2025-04-05 00:42:33,100 - INFO - Fold 3 Macro Precision: 0.378
+2025-04-05 00:42:33,100 - INFO - Fold 3 Macro Recall: 0.376
+2025-04-05 00:42:33,103 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.31      0.32      0.32        28
+           1       0.45      0.45      0.45        38
+           2       0.30      0.30      0.30        20
+           3       0.45      0.43      0.44        23
+
+    accuracy                           0.39       109
+   macro avg       0.38      0.38      0.38       109
+weighted avg       0.39      0.39      0.39       109
+
+
+Cross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:03<00:00,  1.00it/s, acc=0.404, f1=0.380][A
+Cross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:03<00:00,  1.00it/s, acc=0.385, f1=0.377][ACross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:03<00:00,  1.04s/it, acc=0.385, f1=0.377]
+2025-04-05 00:42:33,106 - INFO - adasyn evaluation completed in 3.1 seconds
+2025-04-05 00:42:33,106 - INFO - adasyn => Accuracy: 0.396, F1: 0.379
+Testing resampling methods (RandomForestClassifier):  50%|##############              | 2/4 [00:06<00:06,  3.20s/it, method=smote, f1=0.354]Testing resampling methods (RandomForestClassifier):  50%|#############5             | 2/4 [00:06<00:06,  3.20s/it, method=adasyn, f1=0.379]2025-04-05 00:42:33,106 - INFO - Testing resampling method: smotetomek
+
+Cross-validation (RandomForestClassifier):   0%|                                                                      | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:33,113 - INFO - Applied smotetomek resampling, new shape: (262, 7)
+2025-04-05 00:42:33,113 - INFO - Fitting fold 1/3 for RandomForestClassifier
+2025-04-05 00:42:33,996 - INFO - Fold 1 fitting completed in 0.9 seconds
+2025-04-05 00:42:34,024 - INFO - Fold 1 Accuracy: 0.336
+2025-04-05 00:42:34,024 - INFO - Fold 1 Macro F1: 0.324
+2025-04-05 00:42:34,025 - INFO - Fold 1 Macro Precision: 0.321
+2025-04-05 00:42:34,025 - INFO - Fold 1 Macro Recall: 0.329
+2025-04-05 00:42:34,028 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.35      0.41      0.38        29
+           1       0.38      0.32      0.35        37
+           2       0.16      0.14      0.15        21
+           3       0.40      0.43      0.42        23
+
+    accuracy                           0.34       110
+   macro avg       0.32      0.33      0.32       110
+weighted avg       0.33      0.34      0.33       110
+
+
+Cross-validation (RandomForestClassifier):  33%|####################6                                         | 1/3 [00:00<00:01,  1.08it/s][A
+Cross-validation (RandomForestClassifier):  33%|#############6                           | 1/3 [00:00<00:01,  1.08it/s, acc=0.336, f1=0.324][A2025-04-05 00:42:34,038 - INFO - Applied smotetomek resampling, new shape: (254, 7)
+2025-04-05 00:42:34,039 - INFO - Fitting fold 2/3 for RandomForestClassifier
+2025-04-05 00:42:34,900 - INFO - Fold 2 fitting completed in 0.9 seconds
+2025-04-05 00:42:34,936 - INFO - Fold 2 Accuracy: 0.339
+2025-04-05 00:42:34,937 - INFO - Fold 2 Macro F1: 0.332
+2025-04-05 00:42:34,938 - INFO - Fold 2 Macro Precision: 0.328
+2025-04-05 00:42:34,938 - INFO - Fold 2 Macro Recall: 0.347
+2025-04-05 00:42:34,942 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.29      0.21      0.24        28
+           1       0.31      0.30      0.30        37
+           2       0.28      0.25      0.26        20
+           3       0.44      0.62      0.52        24
+
+    accuracy                           0.34       109
+   macro avg       0.33      0.35      0.33       109
+weighted avg       0.33      0.34      0.33       109
+
+
+Cross-validation (RandomForestClassifier):  67%|###########################3             | 2/3 [00:01<00:00,  1.09it/s, acc=0.336, f1=0.324][A
+Cross-validation (RandomForestClassifier):  67%|###########################3             | 2/3 [00:01<00:00,  1.09it/s, acc=0.339, f1=0.332][A2025-04-05 00:42:34,953 - INFO - Applied smotetomek resampling, new shape: (248, 7)
+2025-04-05 00:42:34,954 - INFO - Fitting fold 3/3 for RandomForestClassifier
+2025-04-05 00:42:35,855 - INFO - Fold 3 fitting completed in 0.9 seconds
+2025-04-05 00:42:35,885 - INFO - Fold 3 Accuracy: 0.349
+2025-04-05 00:42:35,885 - INFO - Fold 3 Macro F1: 0.351
+2025-04-05 00:42:35,886 - INFO - Fold 3 Macro Precision: 0.371
+2025-04-05 00:42:35,886 - INFO - Fold 3 Macro Recall: 0.358
+2025-04-05 00:42:35,889 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.37      0.39      0.38        28
+           1       0.46      0.29      0.35        38
+           2       0.22      0.40      0.28        20
+           3       0.44      0.35      0.39        23
+
+    accuracy                           0.35       109
+   macro avg       0.37      0.36      0.35       109
+weighted avg       0.39      0.35      0.35       109
+
+
+Cross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:02<00:00,  1.07it/s, acc=0.339, f1=0.332][A
+Cross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:02<00:00,  1.07it/s, acc=0.349, f1=0.351][ACross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:02<00:00,  1.08it/s, acc=0.349, f1=0.351]
+2025-04-05 00:42:35,892 - INFO - smotetomek evaluation completed in 2.8 seconds
+2025-04-05 00:42:35,892 - INFO - smotetomek => Accuracy: 0.341, F1: 0.336
+Testing resampling methods (RandomForestClassifier):  75%|####################2      | 3/4 [00:09<00:03,  3.01s/it, method=adasyn, f1=0.379]Testing resampling methods (RandomForestClassifier):  75%|#################2     | 3/4 [00:09<00:03,  3.01s/it, method=smotetomek, f1=0.379]2025-04-05 00:42:35,892 - INFO - Testing resampling method: none
+
+Cross-validation (RandomForestClassifier):   0%|                                                                      | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:35,894 - INFO - Fitting fold 1/3 for RandomForestClassifier
+2025-04-05 00:42:36,779 - INFO - Fold 1 fitting completed in 0.9 seconds
+2025-04-05 00:42:36,808 - INFO - Fold 1 Accuracy: 0.418
+2025-04-05 00:42:36,808 - INFO - Fold 1 Macro F1: 0.385
+2025-04-05 00:42:36,810 - INFO - Fold 1 Macro Precision: 0.396
+2025-04-05 00:42:36,810 - INFO - Fold 1 Macro Recall: 0.391
+2025-04-05 00:42:36,813 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.45      0.52      0.48        29
+           1       0.42      0.51      0.46        37
+           2       0.30      0.14      0.19        21
+           3       0.41      0.39      0.40        23
+
+    accuracy                           0.42       110
+   macro avg       0.40      0.39      0.39       110
+weighted avg       0.40      0.42      0.40       110
+
+
+Cross-validation (RandomForestClassifier):  33%|####################6                                         | 1/3 [00:00<00:01,  1.08it/s][A
+Cross-validation (RandomForestClassifier):  33%|#############6                           | 1/3 [00:00<00:01,  1.08it/s, acc=0.418, f1=0.385][A2025-04-05 00:42:36,815 - INFO - Fitting fold 2/3 for RandomForestClassifier
+2025-04-05 00:42:37,634 - INFO - Fold 2 fitting completed in 0.8 seconds
+2025-04-05 00:42:37,669 - INFO - Fold 2 Accuracy: 0.404
+2025-04-05 00:42:37,669 - INFO - Fold 2 Macro F1: 0.380
+2025-04-05 00:42:37,669 - INFO - Fold 2 Macro Precision: 0.380
+2025-04-05 00:42:37,670 - INFO - Fold 2 Macro Recall: 0.382
+2025-04-05 00:42:37,674 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.36      0.32      0.34        28
+           1       0.44      0.51      0.47        37
+           2       0.18      0.15      0.16        20
+           3       0.54      0.54      0.54        24
+
+    accuracy                           0.40       109
+   macro avg       0.38      0.38      0.38       109
+weighted avg       0.39      0.40      0.40       109
+
+
+Cross-validation (RandomForestClassifier):  67%|###########################3             | 2/3 [00:01<00:00,  1.13it/s, acc=0.418, f1=0.385][A
+Cross-validation (RandomForestClassifier):  67%|###########################3             | 2/3 [00:01<00:00,  1.13it/s, acc=0.404, f1=0.380][A2025-04-05 00:42:37,676 - INFO - Fitting fold 3/3 for RandomForestClassifier
+2025-04-05 00:42:38,556 - INFO - Fold 3 fitting completed in 0.9 seconds
+2025-04-05 00:42:38,587 - INFO - Fold 3 Accuracy: 0.385
+2025-04-05 00:42:38,587 - INFO - Fold 3 Macro F1: 0.377
+2025-04-05 00:42:38,588 - INFO - Fold 3 Macro Precision: 0.378
+2025-04-05 00:42:38,588 - INFO - Fold 3 Macro Recall: 0.376
+2025-04-05 00:42:38,592 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.31      0.32      0.32        28
+           1       0.45      0.45      0.45        38
+           2       0.30      0.30      0.30        20
+           3       0.45      0.43      0.44        23
+
+    accuracy                           0.39       109
+   macro avg       0.38      0.38      0.38       109
+weighted avg       0.39      0.39      0.39       109
+
+
+Cross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:02<00:00,  1.11it/s, acc=0.404, f1=0.380][A
+Cross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:02<00:00,  1.11it/s, acc=0.385, f1=0.377][ACross-validation (RandomForestClassifier): 100%|#########################################| 3/3 [00:02<00:00,  1.11it/s, acc=0.385, f1=0.377]
+2025-04-05 00:42:38,594 - INFO - none evaluation completed in 2.7 seconds
+2025-04-05 00:42:38,594 - INFO - none => Accuracy: 0.402, F1: 0.381
+Testing resampling methods (RandomForestClassifier): 100%|#######################| 4/4 [00:11<00:00,  2.89s/it, method=smotetomek, f1=0.379]Testing resampling methods (RandomForestClassifier): 100%|#############################| 4/4 [00:11<00:00,  2.89s/it, method=none, f1=0.381]Testing resampling methods (RandomForestClassifier): 100%|#############################| 4/4 [00:11<00:00,  2.98s/it, method=none, f1=0.381]
+2025-04-05 00:42:38,596 - INFO - Best resampling method: none with F1: 0.381
+2025-04-05 00:42:38,596 - INFO - Finding best resampling method for SVM
+Testing resampling methods (SVC):   0%|                                                                               | 0/4 [00:00<?, ?it/s]2025-04-05 00:42:38,596 - INFO - Testing resampling method: smote
+
+Cross-validation (SVC):   0%|                                                                                         | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:38,603 - INFO - Applied smote resampling, new shape: (300, 7)
+2025-04-05 00:42:38,603 - INFO - Fitting fold 1/3 for SVC
+2025-04-05 00:42:38,626 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,634 - INFO - Fold 1 Accuracy: 0.355
+2025-04-05 00:42:38,634 - INFO - Fold 1 Macro F1: 0.329
+2025-04-05 00:42:38,635 - INFO - Fold 1 Macro Precision: 0.330
+2025-04-05 00:42:38,635 - INFO - Fold 1 Macro Recall: 0.338
+2025-04-05 00:42:38,638 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.40      0.55      0.46        29
+           1       0.37      0.35      0.36        37
+           2       0.21      0.14      0.17        21
+           3       0.33      0.30      0.32        23
+
+    accuracy                           0.35       110
+   macro avg       0.33      0.34      0.33       110
+weighted avg       0.34      0.35      0.34       110
+
+
+Cross-validation (SVC):  33%|####################                                        | 1/3 [00:00<00:00, 23.74it/s, acc=0.355, f1=0.329][A2025-04-05 00:42:38,643 - INFO - Applied smote resampling, new shape: (300, 7)
+2025-04-05 00:42:38,644 - INFO - Fitting fold 2/3 for SVC
+2025-04-05 00:42:38,667 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,672 - INFO - Fold 2 Accuracy: 0.321
+2025-04-05 00:42:38,673 - INFO - Fold 2 Macro F1: 0.323
+2025-04-05 00:42:38,673 - INFO - Fold 2 Macro Precision: 0.325
+2025-04-05 00:42:38,673 - INFO - Fold 2 Macro Recall: 0.322
+2025-04-05 00:42:38,676 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.31      0.32      0.32        28
+           1       0.31      0.32      0.32        37
+           2       0.33      0.35      0.34        20
+           3       0.35      0.29      0.32        24
+
+    accuracy                           0.32       109
+   macro avg       0.33      0.32      0.32       109
+weighted avg       0.32      0.32      0.32       109
+
+
+Cross-validation (SVC):  67%|########################################                    | 2/3 [00:00<00:00, 24.75it/s, acc=0.321, f1=0.323][A2025-04-05 00:42:38,683 - INFO - Applied smote resampling, new shape: (296, 7)
+2025-04-05 00:42:38,684 - INFO - Fitting fold 3/3 for SVC
+2025-04-05 00:42:38,705 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,710 - INFO - Fold 3 Accuracy: 0.440
+2025-04-05 00:42:38,712 - INFO - Fold 3 Macro F1: 0.437
+2025-04-05 00:42:38,712 - INFO - Fold 3 Macro Precision: 0.445
+2025-04-05 00:42:38,712 - INFO - Fold 3 Macro Recall: 0.435
+2025-04-05 00:42:38,717 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.50      0.54      0.52        28
+           1       0.44      0.42      0.43        38
+           2       0.28      0.35      0.31        20
+           3       0.56      0.43      0.49        23
+
+    accuracy                           0.44       109
+   macro avg       0.45      0.44      0.44       109
+weighted avg       0.45      0.44      0.44       109
+
+
+Cross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 24.83it/s, acc=0.321, f1=0.323][A
+Cross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 24.83it/s, acc=0.440, f1=0.437][ACross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 24.62it/s, acc=0.440, f1=0.437]
+2025-04-05 00:42:38,720 - INFO - smote evaluation completed in 0.1 seconds
+2025-04-05 00:42:38,720 - INFO - smote => Accuracy: 0.372, F1: 0.363
+Testing resampling methods (SVC):  25%|#################7                                                     | 1/4 [00:00<00:00,  8.08it/s]Testing resampling methods (SVC):  25%|###########7                                   | 1/4 [00:00<00:00,  8.08it/s, method=smote, f1=0.363]2025-04-05 00:42:38,721 - INFO - Testing resampling method: adasyn
+
+Cross-validation (SVC):   0%|                                                                                         | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:38,727 - INFO - Applied adasyn resampling, new shape: (298, 7)
+2025-04-05 00:42:38,728 - INFO - Fitting fold 1/3 for SVC
+2025-04-05 00:42:38,753 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,759 - INFO - Fold 1 Accuracy: 0.382
+2025-04-05 00:42:38,759 - INFO - Fold 1 Macro F1: 0.357
+2025-04-05 00:42:38,759 - INFO - Fold 1 Macro Precision: 0.357
+2025-04-05 00:42:38,759 - INFO - Fold 1 Macro Recall: 0.366
+2025-04-05 00:42:38,763 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.43      0.55      0.48        29
+           1       0.39      0.38      0.38        37
+           2       0.23      0.14      0.18        21
+           3       0.38      0.39      0.38        23
+
+    accuracy                           0.38       110
+   macro avg       0.36      0.37      0.36       110
+weighted avg       0.37      0.38      0.37       110
+
+
+Cross-validation (SVC):  33%|####################                                        | 1/3 [00:00<00:00, 23.67it/s, acc=0.382, f1=0.357][A2025-04-05 00:42:38,767 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:38,768 - WARNING - Proceeding without resampling for fold 2
+2025-04-05 00:42:38,768 - INFO - Fitting fold 2/3 for SVC
+2025-04-05 00:42:38,784 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,789 - INFO - Fold 2 Accuracy: 0.339
+2025-04-05 00:42:38,789 - INFO - Fold 2 Macro F1: 0.341
+2025-04-05 00:42:38,790 - INFO - Fold 2 Macro Precision: 0.352
+2025-04-05 00:42:38,790 - INFO - Fold 2 Macro Recall: 0.338
+2025-04-05 00:42:38,793 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.31      0.39      0.34        28
+           1       0.32      0.32      0.32        37
+           2       0.33      0.30      0.32        20
+           3       0.44      0.33      0.38        24
+
+    accuracy                           0.34       109
+   macro avg       0.35      0.34      0.34       109
+weighted avg       0.35      0.34      0.34       109
+
+
+Cross-validation (SVC):  67%|########################################                    | 2/3 [00:00<00:00, 27.57it/s, acc=0.339, f1=0.341][A2025-04-05 00:42:38,797 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:38,797 - WARNING - Proceeding without resampling for fold 3
+2025-04-05 00:42:38,809 - INFO - Fitting fold 3/3 for SVC
+2025-04-05 00:42:38,824 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,829 - INFO - Fold 3 Accuracy: 0.422
+2025-04-05 00:42:38,830 - INFO - Fold 3 Macro F1: 0.417
+2025-04-05 00:42:38,830 - INFO - Fold 3 Macro Precision: 0.414
+2025-04-05 00:42:38,830 - INFO - Fold 3 Macro Recall: 0.420
+2025-04-05 00:42:38,834 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.43      0.46      0.45        28
+           1       0.43      0.39      0.41        38
+           2       0.32      0.30      0.31        20
+           3       0.48      0.52      0.50        23
+
+    accuracy                           0.42       109
+   macro avg       0.41      0.42      0.42       109
+weighted avg       0.42      0.42      0.42       109
+
+
+Cross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 26.41it/s, acc=0.339, f1=0.341][A
+Cross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 26.41it/s, acc=0.422, f1=0.417][ACross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 26.27it/s, acc=0.422, f1=0.417]
+2025-04-05 00:42:38,838 - INFO - adasyn evaluation completed in 0.1 seconds
+2025-04-05 00:42:38,838 - INFO - adasyn => Accuracy: 0.381, F1: 0.372
+Testing resampling methods (SVC):  50%|#######################5                       | 2/4 [00:00<00:00,  8.34it/s, method=smote, f1=0.363]Testing resampling methods (SVC):  50%|#######################                       | 2/4 [00:00<00:00,  8.34it/s, method=adasyn, f1=0.372]2025-04-05 00:42:38,839 - INFO - Testing resampling method: smotetomek
+
+Cross-validation (SVC):   0%|                                                                                         | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:38,845 - INFO - Applied smotetomek resampling, new shape: (262, 7)
+2025-04-05 00:42:38,846 - INFO - Fitting fold 1/3 for SVC
+2025-04-05 00:42:38,864 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,870 - INFO - Fold 1 Accuracy: 0.364
+2025-04-05 00:42:38,871 - INFO - Fold 1 Macro F1: 0.340
+2025-04-05 00:42:38,871 - INFO - Fold 1 Macro Precision: 0.339
+2025-04-05 00:42:38,871 - INFO - Fold 1 Macro Recall: 0.348
+2025-04-05 00:42:38,874 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.41      0.55      0.47        29
+           1       0.38      0.35      0.37        37
+           2       0.20      0.14      0.17        21
+           3       0.36      0.35      0.36        23
+
+    accuracy                           0.36       110
+   macro avg       0.34      0.35      0.34       110
+weighted avg       0.35      0.36      0.35       110
+
+
+Cross-validation (SVC):  33%|####################                                        | 1/3 [00:00<00:00, 27.17it/s, acc=0.364, f1=0.340][A2025-04-05 00:42:38,882 - INFO - Applied smotetomek resampling, new shape: (254, 7)
+2025-04-05 00:42:38,883 - INFO - Fitting fold 2/3 for SVC
+2025-04-05 00:42:38,901 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,906 - INFO - Fold 2 Accuracy: 0.339
+2025-04-05 00:42:38,907 - INFO - Fold 2 Macro F1: 0.336
+2025-04-05 00:42:38,907 - INFO - Fold 2 Macro Precision: 0.335
+2025-04-05 00:42:38,908 - INFO - Fold 2 Macro Recall: 0.351
+2025-04-05 00:42:38,911 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.24      0.25      0.25        28
+           1       0.38      0.27      0.32        37
+           2       0.32      0.30      0.31        20
+           3       0.40      0.58      0.47        24
+
+    accuracy                           0.34       109
+   macro avg       0.34      0.35      0.34       109
+weighted avg       0.34      0.34      0.33       109
+
+
+Cross-validation (SVC):  67%|########################################                    | 2/3 [00:00<00:00, 27.28it/s, acc=0.339, f1=0.336][A2025-04-05 00:42:38,919 - INFO - Applied smotetomek resampling, new shape: (248, 7)
+2025-04-05 00:42:38,920 - INFO - Fitting fold 3/3 for SVC
+2025-04-05 00:42:38,936 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,941 - INFO - Fold 3 Accuracy: 0.404
+2025-04-05 00:42:38,942 - INFO - Fold 3 Macro F1: 0.398
+2025-04-05 00:42:38,942 - INFO - Fold 3 Macro Precision: 0.405
+2025-04-05 00:42:38,942 - INFO - Fold 3 Macro Recall: 0.400
+2025-04-05 00:42:38,945 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.45      0.46      0.46        28
+           1       0.50      0.39      0.44        38
+           2       0.24      0.35      0.29        20
+           3       0.43      0.39      0.41        23
+
+    accuracy                           0.40       109
+   macro avg       0.40      0.40      0.40       109
+weighted avg       0.42      0.40      0.41       109
+
+
+Cross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 28.06it/s, acc=0.339, f1=0.336][A
+Cross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 28.06it/s, acc=0.404, f1=0.398][ACross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 27.80it/s, acc=0.404, f1=0.398]
+2025-04-05 00:42:38,948 - INFO - smotetomek evaluation completed in 0.1 seconds
+2025-04-05 00:42:38,948 - INFO - smotetomek => Accuracy: 0.369, F1: 0.358
+Testing resampling methods (SVC):  75%|##################################5           | 3/4 [00:00<00:00,  8.63it/s, method=adasyn, f1=0.372]Testing resampling methods (SVC):  75%|###############################5          | 3/4 [00:00<00:00,  8.63it/s, method=smotetomek, f1=0.372]2025-04-05 00:42:38,949 - INFO - Testing resampling method: none
+
+Cross-validation (SVC):   0%|                                                                                         | 0/3 [00:00<?, ?it/s][A2025-04-05 00:42:38,951 - INFO - Fitting fold 1/3 for SVC
+2025-04-05 00:42:38,967 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:38,972 - INFO - Fold 1 Accuracy: 0.373
+2025-04-05 00:42:38,973 - INFO - Fold 1 Macro F1: 0.346
+2025-04-05 00:42:38,973 - INFO - Fold 1 Macro Precision: 0.352
+2025-04-05 00:42:38,973 - INFO - Fold 1 Macro Recall: 0.355
+2025-04-05 00:42:38,976 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.38      0.55      0.45        29
+           1       0.41      0.38      0.39        37
+           2       0.25      0.14      0.18        21
+           3       0.36      0.35      0.36        23
+
+    accuracy                           0.37       110
+   macro avg       0.35      0.36      0.35       110
+weighted avg       0.36      0.37      0.36       110
+
+
+Cross-validation (SVC):  33%|####################                                        | 1/3 [00:00<00:00, 36.24it/s, acc=0.373, f1=0.346][A2025-04-05 00:42:38,980 - INFO - Fitting fold 2/3 for SVC
+2025-04-05 00:42:38,995 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:39,001 - INFO - Fold 2 Accuracy: 0.339
+2025-04-05 00:42:39,002 - INFO - Fold 2 Macro F1: 0.341
+2025-04-05 00:42:39,002 - INFO - Fold 2 Macro Precision: 0.352
+2025-04-05 00:42:39,002 - INFO - Fold 2 Macro Recall: 0.338
+2025-04-05 00:42:39,006 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.31      0.39      0.34        28
+           1       0.32      0.32      0.32        37
+           2       0.33      0.30      0.32        20
+           3       0.44      0.33      0.38        24
+
+    accuracy                           0.34       109
+   macro avg       0.35      0.34      0.34       109
+weighted avg       0.35      0.34      0.34       109
+
+
+Cross-validation (SVC):  67%|########################################                    | 2/3 [00:00<00:00, 35.58it/s, acc=0.339, f1=0.341][A2025-04-05 00:42:39,008 - INFO - Fitting fold 3/3 for SVC
+2025-04-05 00:42:39,023 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:39,028 - INFO - Fold 3 Accuracy: 0.422
+2025-04-05 00:42:39,028 - INFO - Fold 3 Macro F1: 0.417
+2025-04-05 00:42:39,030 - INFO - Fold 3 Macro Precision: 0.414
+2025-04-05 00:42:39,030 - INFO - Fold 3 Macro Recall: 0.420
+2025-04-05 00:42:39,034 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.43      0.46      0.45        28
+           1       0.43      0.39      0.41        38
+           2       0.32      0.30      0.31        20
+           3       0.48      0.52      0.50        23
+
+    accuracy                           0.42       109
+   macro avg       0.41      0.42      0.42       109
+weighted avg       0.42      0.42      0.42       109
+
+
+Cross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 35.78it/s, acc=0.422, f1=0.417][ACross-validation (SVC): 100%|############################################################| 3/3 [00:00<00:00, 35.35it/s, acc=0.422, f1=0.417]
+2025-04-05 00:42:39,036 - INFO - none evaluation completed in 0.1 seconds
+2025-04-05 00:42:39,037 - INFO - none => Accuracy: 0.378, F1: 0.368
+Testing resampling methods (SVC): 100%|################################################| 4/4 [00:00<00:00,  8.63it/s, method=none, f1=0.372]Testing resampling methods (SVC): 100%|################################################| 4/4 [00:00<00:00,  9.08it/s, method=none, f1=0.372]
+2025-04-05 00:42:39,037 - INFO - Best resampling method: adasyn with F1: 0.372
+Final model evaluation:   0%|                                                                                         | 0/3 [00:00<?, ?it/s]2025-04-05 00:42:39,038 - INFO - Evaluating model: Logistic Regression with smotetomek resampling
+
+Cross-validation (LogisticRegression):   0%|                                                                          | 0/5 [00:00<?, ?it/s][A2025-04-05 00:42:39,045 - INFO - Applied smotetomek resampling, new shape: (290, 7)
+2025-04-05 00:42:39,045 - INFO - Fitting fold 1/5 for LogisticRegression
+2025-04-05 00:42:39,052 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:39,055 - INFO - Fold 1 Accuracy: 0.182
+2025-04-05 00:42:39,056 - INFO - Fold 1 Macro F1: 0.166
+2025-04-05 00:42:39,056 - INFO - Fold 1 Macro Precision: 0.172
+2025-04-05 00:42:39,056 - INFO - Fold 1 Macro Recall: 0.169
+2025-04-05 00:42:39,060 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.14      0.18      0.15        17
+           1       0.29      0.26      0.27        23
+           2       0.12      0.17      0.14        12
+           3       0.14      0.07      0.10        14
+
+    accuracy                           0.18        66
+   macro avg       0.17      0.17      0.17        66
+weighted avg       0.19      0.18      0.18        66
+
+
+Cross-validation (LogisticRegression):  20%|#########                                    | 1/5 [00:00<00:00, 44.37it/s, acc=0.182, f1=0.166][A2025-04-05 00:42:39,070 - INFO - Applied smotetomek resampling, new shape: (300, 7)
+2025-04-05 00:42:39,070 - INFO - Fitting fold 2/5 for LogisticRegression
+2025-04-05 00:42:39,074 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:39,078 - INFO - Fold 2 Accuracy: 0.409
+2025-04-05 00:42:39,078 - INFO - Fold 2 Macro F1: 0.354
+2025-04-05 00:42:39,078 - INFO - Fold 2 Macro Precision: 0.343
+2025-04-05 00:42:39,078 - INFO - Fold 2 Macro Recall: 0.366
+2025-04-05 00:42:39,084 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.47      0.47      0.47        17
+           1       0.50      0.57      0.53        23
+           2       0.00      0.00      0.00        12
+           3       0.40      0.43      0.41        14
+
+    accuracy                           0.41        66
+   macro avg       0.34      0.37      0.35        66
+weighted avg       0.38      0.41      0.39        66
+
+
+Cross-validation (LogisticRegression):  40%|##################                           | 2/5 [00:00<00:00, 42.63it/s, acc=0.409, f1=0.354][A2025-04-05 00:42:39,091 - INFO - Applied smotetomek resampling, new shape: (304, 7)
+2025-04-05 00:42:39,092 - INFO - Fitting fold 3/5 for LogisticRegression
+2025-04-05 00:42:39,097 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:39,102 - INFO - Fold 3 Accuracy: 0.152
+2025-04-05 00:42:39,102 - INFO - Fold 3 Macro F1: 0.161
+2025-04-05 00:42:39,103 - INFO - Fold 3 Macro Precision: 0.179
+2025-04-05 00:42:39,103 - INFO - Fold 3 Macro Recall: 0.153
+2025-04-05 00:42:39,106 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.18      0.24      0.21        17
+           1       0.09      0.09      0.09        22
+           2       0.00      0.00      0.00        13
+           3       0.44      0.29      0.35        14
+
+    accuracy                           0.15        66
+   macro avg       0.18      0.15      0.16        66
+weighted avg       0.17      0.15      0.16        66
+
+
+Cross-validation (LogisticRegression):  60%|###########################                  | 3/5 [00:00<00:00, 43.65it/s, acc=0.152, f1=0.161][A2025-04-05 00:42:39,114 - INFO - Applied smotetomek resampling, new shape: (298, 7)
+2025-04-05 00:42:39,115 - INFO - Fitting fold 4/5 for LogisticRegression
+2025-04-05 00:42:39,120 - INFO - Fold 4 fitting completed in 0.0 seconds
+2025-04-05 00:42:39,123 - INFO - Fold 4 Accuracy: 0.262
+2025-04-05 00:42:39,124 - INFO - Fold 4 Macro F1: 0.222
+2025-04-05 00:42:39,124 - INFO - Fold 4 Macro Precision: 0.234
+2025-04-05 00:42:39,124 - INFO - Fold 4 Macro Recall: 0.229
+2025-04-05 00:42:39,128 - INFO - Fold 4 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.12      0.12      0.12        17
+           1       0.33      0.50      0.40        22
+           2       0.14      0.08      0.11        12
+           3       0.33      0.21      0.26        14
+
+    accuracy                           0.26        65
+   macro avg       0.23      0.23      0.22        65
+weighted avg       0.24      0.26      0.24        65
+
+
+Cross-validation (LogisticRegression):  80%|####################################         | 4/5 [00:00<00:00, 44.22it/s, acc=0.262, f1=0.222][A2025-04-05 00:42:39,137 - INFO - Applied smotetomek resampling, new shape: (304, 7)
+2025-04-05 00:42:39,137 - INFO - Fitting fold 5/5 for LogisticRegression
+2025-04-05 00:42:39,142 - INFO - Fold 5 fitting completed in 0.0 seconds
+2025-04-05 00:42:39,146 - INFO - Fold 5 Accuracy: 0.385
+2025-04-05 00:42:39,147 - INFO - Fold 5 Macro F1: 0.391
+2025-04-05 00:42:39,147 - INFO - Fold 5 Macro Precision: 0.386
+2025-04-05 00:42:39,147 - INFO - Fold 5 Macro Recall: 0.410
+2025-04-05 00:42:39,152 - INFO - Fold 5 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.27      0.24      0.25        17
+           1       0.38      0.27      0.32        22
+           2       0.28      0.42      0.33        12
+           3       0.62      0.71      0.67        14
+
+    accuracy                           0.38        65
+   macro avg       0.39      0.41      0.39        65
+weighted avg       0.38      0.38      0.38        65
+
+
+Cross-validation (LogisticRegression): 100%|#############################################| 5/5 [00:00<00:00, 43.74it/s, acc=0.262, f1=0.222][A
+Cross-validation (LogisticRegression): 100%|#############################################| 5/5 [00:00<00:00, 43.74it/s, acc=0.385, f1=0.391][ACross-validation (LogisticRegression): 100%|#############################################| 5/5 [00:00<00:00, 43.41it/s, acc=0.385, f1=0.391]
+2025-04-05 00:42:39,155 - INFO - Logistic Regression => Accuracy: 0.278, Macro F1: 0.259, Macro Precision: 0.263, Macro Recall: 0.265
+Final model evaluation:  33%|###########################                                                      | 1/3 [00:02<00:05,  2.75s/it]Final model evaluation:  33%|##############6                             | 1/3 [00:02<00:05,  2.75s/it, model=Logistic Regression, f1=0.259]2025-04-05 00:42:41,814 - INFO - Evaluating model: Random Forest with none resampling
+
+Cross-validation (RandomForestClassifier):   0%|                                                                      | 0/5 [00:00<?, ?it/s][A2025-04-05 00:42:41,822 - INFO - Fitting fold 1/5 for RandomForestClassifier
+2025-04-05 00:42:42,843 - INFO - Fold 1 fitting completed in 1.0 seconds
+2025-04-05 00:42:42,874 - INFO - Fold 1 Accuracy: 0.333
+2025-04-05 00:42:42,874 - INFO - Fold 1 Macro F1: 0.294
+2025-04-05 00:42:42,875 - INFO - Fold 1 Macro Precision: 0.291
+2025-04-05 00:42:42,875 - INFO - Fold 1 Macro Recall: 0.305
+2025-04-05 00:42:42,878 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.36      0.47      0.41        17
+           1       0.35      0.39      0.37        23
+           2       0.00      0.00      0.00        12
+           3       0.45      0.36      0.40        14
+
+    accuracy                           0.33        66
+   macro avg       0.29      0.30      0.29        66
+weighted avg       0.31      0.33      0.32        66
+
+
+Cross-validation (RandomForestClassifier):  20%|############4                                                 | 1/5 [00:01<00:04,  1.06s/it][A
+Cross-validation (RandomForestClassifier):  20%|########2                                | 1/5 [00:01<00:04,  1.06s/it, acc=0.333, f1=0.294][A2025-04-05 00:42:42,881 - INFO - Fitting fold 2/5 for RandomForestClassifier
+2025-04-05 00:42:43,802 - INFO - Fold 2 fitting completed in 0.9 seconds
+2025-04-05 00:42:43,832 - INFO - Fold 2 Accuracy: 0.394
+2025-04-05 00:42:43,832 - INFO - Fold 2 Macro F1: 0.376
+2025-04-05 00:42:43,833 - INFO - Fold 2 Macro Precision: 0.424
+2025-04-05 00:42:43,833 - INFO - Fold 2 Macro Recall: 0.375
+2025-04-05 00:42:43,836 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.36      0.47      0.41        17
+           1       0.37      0.43      0.40        23
+           2       0.50      0.17      0.25        12
+           3       0.46      0.43      0.44        14
+
+    accuracy                           0.39        66
+   macro avg       0.42      0.38      0.38        66
+weighted avg       0.41      0.39      0.38        66
+
+
+Cross-validation (RandomForestClassifier):  40%|################4                        | 2/5 [00:02<00:03,  1.00s/it, acc=0.333, f1=0.294][A
+Cross-validation (RandomForestClassifier):  40%|################4                        | 2/5 [00:02<00:03,  1.00s/it, acc=0.394, f1=0.376][A2025-04-05 00:42:43,839 - INFO - Fitting fold 3/5 for RandomForestClassifier
+2025-04-05 00:42:44,796 - INFO - Fold 3 fitting completed in 1.0 seconds
+2025-04-05 00:42:44,822 - INFO - Fold 3 Accuracy: 0.439
+2025-04-05 00:42:44,823 - INFO - Fold 3 Macro F1: 0.422
+2025-04-05 00:42:44,823 - INFO - Fold 3 Macro Precision: 0.427
+2025-04-05 00:42:44,823 - INFO - Fold 3 Macro Recall: 0.423
+2025-04-05 00:42:44,827 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.38      0.29      0.33        17
+           1       0.50      0.59      0.54        22
+           2       0.29      0.31      0.30        13
+           3       0.54      0.50      0.52        14
+
+    accuracy                           0.44        66
+   macro avg       0.43      0.42      0.42        66
+weighted avg       0.44      0.44      0.43        66
+
+
+Cross-validation (RandomForestClassifier):  60%|########################5                | 3/5 [00:03<00:01,  1.00it/s, acc=0.394, f1=0.376][A
+Cross-validation (RandomForestClassifier):  60%|########################5                | 3/5 [00:03<00:01,  1.00it/s, acc=0.439, f1=0.422][A2025-04-05 00:42:44,830 - INFO - Fitting fold 4/5 for RandomForestClassifier
+2025-04-05 00:42:45,829 - INFO - Fold 4 fitting completed in 1.0 seconds
+2025-04-05 00:42:45,874 - INFO - Fold 4 Accuracy: 0.338
+2025-04-05 00:42:45,875 - INFO - Fold 4 Macro F1: 0.333
+2025-04-05 00:42:45,875 - INFO - Fold 4 Macro Precision: 0.341
+2025-04-05 00:42:45,875 - INFO - Fold 4 Macro Recall: 0.334
+2025-04-05 00:42:45,879 - INFO - Fold 4 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.41      0.53      0.46        17
+           1       0.27      0.27      0.27        22
+           2       0.38      0.25      0.30        12
+           3       0.31      0.29      0.30        14
+
+    accuracy                           0.34        65
+   macro avg       0.34      0.33      0.33        65
+weighted avg       0.33      0.34      0.33        65
+
+
+Cross-validation (RandomForestClassifier):  80%|################################8        | 4/5 [00:04<00:01,  1.02s/it, acc=0.439, f1=0.422][A
+Cross-validation (RandomForestClassifier):  80%|################################8        | 4/5 [00:04<00:01,  1.02s/it, acc=0.338, f1=0.333][A2025-04-05 00:42:45,882 - INFO - Fitting fold 5/5 for RandomForestClassifier
+2025-04-05 00:42:46,855 - INFO - Fold 5 fitting completed in 1.0 seconds
+2025-04-05 00:42:46,890 - INFO - Fold 5 Accuracy: 0.369
+2025-04-05 00:42:46,890 - INFO - Fold 5 Macro F1: 0.340
+2025-04-05 00:42:46,891 - INFO - Fold 5 Macro Precision: 0.341
+2025-04-05 00:42:46,891 - INFO - Fold 5 Macro Recall: 0.344
+2025-04-05 00:42:46,895 - INFO - Fold 5 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.31      0.24      0.27        17
+           1       0.46      0.55      0.50        22
+           2       0.17      0.17      0.17        12
+           3       0.43      0.43      0.43        14
+
+    accuracy                           0.37        65
+   macro avg       0.34      0.34      0.34        65
+weighted avg       0.36      0.37      0.36        65
+
+
+Cross-validation (RandomForestClassifier): 100%|#########################################| 5/5 [00:05<00:00,  1.02s/it, acc=0.338, f1=0.333][A
+Cross-validation (RandomForestClassifier): 100%|#########################################| 5/5 [00:05<00:00,  1.02s/it, acc=0.369, f1=0.340][ACross-validation (RandomForestClassifier): 100%|#########################################| 5/5 [00:05<00:00,  1.02s/it, acc=0.369, f1=0.340]
+2025-04-05 00:42:46,898 - INFO - Random Forest => Accuracy: 0.375, Macro F1: 0.353, Macro Precision: 0.365, Macro Recall: 0.356
+Final model evaluation:  67%|#############################3              | 2/3 [00:09<00:05,  5.40s/it, model=Logistic Regression, f1=0.259]Final model evaluation:  67%|#################################3                | 2/3 [00:10<00:05,  5.40s/it, model=Random Forest, f1=0.353]2025-04-05 00:42:49,044 - INFO - Evaluating model: SVM with adasyn resampling
+
+Cross-validation (SVC):   0%|                                                                                         | 0/5 [00:00<?, ?it/s][A2025-04-05 00:42:49,053 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:49,054 - WARNING - Proceeding without resampling for fold 1
+2025-04-05 00:42:49,054 - INFO - Fitting fold 1/5 for SVC
+2025-04-05 00:42:49,084 - INFO - Fold 1 fitting completed in 0.0 seconds
+2025-04-05 00:42:49,093 - INFO - Fold 1 Accuracy: 0.439
+2025-04-05 00:42:49,093 - INFO - Fold 1 Macro F1: 0.372
+2025-04-05 00:42:49,093 - INFO - Fold 1 Macro Precision: 0.369
+2025-04-05 00:42:49,093 - INFO - Fold 1 Macro Recall: 0.411
+2025-04-05 00:42:49,100 - INFO - Fold 1 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.45      0.82      0.58        17
+           1       0.56      0.39      0.46        23
+           2       0.00      0.00      0.00        12
+           3       0.46      0.43      0.44        14
+
+    accuracy                           0.44        66
+   macro avg       0.37      0.41      0.37        66
+weighted avg       0.41      0.44      0.41        66
+
+
+Cross-validation (SVC):  20%|############                                                | 1/5 [00:00<00:00, 17.92it/s, acc=0.439, f1=0.372][A2025-04-05 00:42:49,105 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:49,105 - WARNING - Proceeding without resampling for fold 2
+2025-04-05 00:42:49,106 - INFO - Fitting fold 2/5 for SVC
+2025-04-05 00:42:49,132 - INFO - Fold 2 fitting completed in 0.0 seconds
+2025-04-05 00:42:49,138 - INFO - Fold 2 Accuracy: 0.318
+2025-04-05 00:42:49,138 - INFO - Fold 2 Macro F1: 0.315
+2025-04-05 00:42:49,138 - INFO - Fold 2 Macro Precision: 0.326
+2025-04-05 00:42:49,139 - INFO - Fold 2 Macro Recall: 0.310
+2025-04-05 00:42:49,142 - INFO - Fold 2 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.37      0.41      0.39        17
+           1       0.26      0.30      0.28        23
+           2       0.22      0.17      0.19        12
+           3       0.45      0.36      0.40        14
+
+    accuracy                           0.32        66
+   macro avg       0.33      0.31      0.31        66
+weighted avg       0.32      0.32      0.32        66
+
+
+Cross-validation (SVC):  40%|########################                                    | 2/5 [00:00<00:00, 20.51it/s, acc=0.318, f1=0.315][A2025-04-05 00:42:49,146 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:49,147 - WARNING - Proceeding without resampling for fold 3
+2025-04-05 00:42:49,147 - INFO - Fitting fold 3/5 for SVC
+2025-04-05 00:42:49,169 - INFO - Fold 3 fitting completed in 0.0 seconds
+2025-04-05 00:42:49,174 - INFO - Fold 3 Accuracy: 0.379
+2025-04-05 00:42:49,175 - INFO - Fold 3 Macro F1: 0.375
+2025-04-05 00:42:49,175 - INFO - Fold 3 Macro Precision: 0.378
+2025-04-05 00:42:49,175 - INFO - Fold 3 Macro Recall: 0.388
+2025-04-05 00:42:49,179 - INFO - Fold 3 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.38      0.47      0.42        17
+           1       0.43      0.27      0.33        22
+           2       0.33      0.31      0.32        13
+           3       0.37      0.50      0.42        14
+
+    accuracy                           0.38        66
+   macro avg       0.38      0.39      0.37        66
+weighted avg       0.38      0.38      0.37        66
+
+
+Cross-validation (SVC):  60%|####################################                        | 3/5 [00:00<00:00, 22.40it/s, acc=0.318, f1=0.315][A
+Cross-validation (SVC):  60%|####################################                        | 3/5 [00:00<00:00, 22.40it/s, acc=0.379, f1=0.375][A2025-04-05 00:42:49,184 - WARNING - Resampling with adasyn failed: No samples will be generated with the provided ratio settings.
+2025-04-05 00:42:49,185 - WARNING - Proceeding without resampling for fold 4
+2025-04-05 00:42:49,185 - INFO - Fitting fold 4/5 for SVC
+2025-04-05 00:42:49,208 - INFO - Fold 4 fitting completed in 0.0 seconds
+2025-04-05 00:42:49,212 - INFO - Fold 4 Accuracy: 0.415
+2025-04-05 00:42:49,213 - INFO - Fold 4 Macro F1: 0.411
+2025-04-05 00:42:49,213 - INFO - Fold 4 Macro Precision: 0.416
+2025-04-05 00:42:49,214 - INFO - Fold 4 Macro Recall: 0.420
+2025-04-05 00:42:49,218 - INFO - Fold 4 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.46      0.65      0.54        17
+           1       0.35      0.27      0.31        22
+           2       0.31      0.33      0.32        12
+           3       0.55      0.43      0.48        14
+
+    accuracy                           0.42        65
+   macro avg       0.42      0.42      0.41        65
+weighted avg       0.41      0.42      0.41        65
+
+
+Cross-validation (SVC):  80%|################################################            | 4/5 [00:00<00:00, 22.40it/s, acc=0.415, f1=0.411][A2025-04-05 00:42:49,226 - INFO - Applied adasyn resampling, new shape: (357, 7)
+2025-04-05 00:42:49,227 - INFO - Fitting fold 5/5 for SVC
+2025-04-05 00:42:49,258 - INFO - Fold 5 fitting completed in 0.0 seconds
+2025-04-05 00:42:49,264 - INFO - Fold 5 Accuracy: 0.415
+2025-04-05 00:42:49,264 - INFO - Fold 5 Macro F1: 0.409
+2025-04-05 00:42:49,265 - INFO - Fold 5 Macro Precision: 0.407
+2025-04-05 00:42:49,266 - INFO - Fold 5 Macro Recall: 0.423
+2025-04-05 00:42:49,269 - INFO - Fold 5 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.40      0.35      0.38        17
+           1       0.44      0.36      0.40        22
+           2       0.33      0.33      0.33        12
+           3       0.45      0.64      0.53        14
+
+    accuracy                           0.42        65
+   macro avg       0.41      0.42      0.41        65
+weighted avg       0.41      0.42      0.41        65
+
+
+Cross-validation (SVC): 100%|############################################################| 5/5 [00:00<00:00, 22.40it/s, acc=0.415, f1=0.409][ACross-validation (SVC): 100%|############################################################| 5/5 [00:00<00:00, 22.12it/s, acc=0.415, f1=0.409]
+2025-04-05 00:42:49,273 - INFO - SVM => Accuracy: 0.393, Macro F1: 0.376, Macro Precision: 0.379, Macro Recall: 0.390
+Final model evaluation: 100%|##################################################| 3/3 [00:11<00:00,  3.76s/it, model=Random Forest, f1=0.353]Final model evaluation: 100%|############################################################| 3/3 [00:11<00:00,  3.76s/it, model=SVM, f1=0.376]Final model evaluation: 100%|############################################################| 3/3 [00:11<00:00,  3.93s/it, model=SVM, f1=0.376]
+2025-04-05 00:42:50,844 - INFO - Total model training and evaluation completed in 29.8 seconds
+2025-04-05 00:42:50,847 - INFO - Model evaluation completed.
+2025-04-05 00:42:50,847 - INFO - Logistic Regression => Accuracy: 0.28, F1: 0.26, Precision: 0.26, Recall: 0.27
+2025-04-05 00:42:50,848 - INFO - Best Logistic Regression parameters:
+2025-04-05 00:42:50,849 - INFO -   C: 0.001
+2025-04-05 00:42:50,849 - INFO -   solver: lbfgs
+2025-04-05 00:42:50,849 - INFO -   multi_class: ovr
+2025-04-05 00:42:50,849 - INFO - Best score during tuning: 0.000
+2025-04-05 00:42:50,850 - INFO - Random Forest => Accuracy: 0.37, F1: 0.35, Precision: 0.36, Recall: 0.36
+2025-04-05 00:42:50,850 - INFO - Best Random Forest parameters:
+2025-04-05 00:42:50,850 - INFO -   n_estimators: 600
+2025-04-05 00:42:50,850 - INFO -   max_depth: 10
+2025-04-05 00:42:50,851 - INFO -   min_samples_split: 2
+2025-04-05 00:42:50,851 - INFO -   min_samples_leaf: 1
+2025-04-05 00:42:50,852 - INFO -   max_features: None
+2025-04-05 00:42:50,852 - INFO -   criterion: entropy
+2025-04-05 00:42:50,852 - INFO - Best score during tuning: 0.000
+2025-04-05 00:42:50,852 - INFO - SVM => Accuracy: 0.39, F1: 0.38, Precision: 0.38, Recall: 0.39
+2025-04-05 00:42:50,852 - INFO - Best SVM parameters:
+2025-04-05 00:42:50,853 - INFO -   C: 10
+2025-04-05 00:42:50,853 - INFO -   gamma: 1
+2025-04-05 00:42:50,853 - INFO -   kernel: rbf
+2025-04-05 00:42:50,853 - INFO - Best score during tuning: 0.000
+2025-04-05 00:42:50,855 - INFO - ==================================================
+2025-04-05 00:42:50,855 - INFO - FINAL RESULT SUMMARY
+2025-04-05 00:42:50,855 - INFO - ==================================================
+2025-04-05 00:42:50,855 - INFO - Best parameters for LogisticRegression with liblinear solver:
+2025-04-05 00:42:50,856 - INFO -   C: 0.001
+2025-04-05 00:42:50,856 - INFO -   solver: liblinear
+2025-04-05 00:42:50,857 - INFO -   multi_class: ovr
+2025-04-05 00:42:50,858 - INFO - Best score during liblinear tuning: 0.000
+
+==================================================
+LIBLINEAR SOLVER BEST PARAMETERS (FINAL OUTPUT)
+==================================================
+  C: 0.001
+  solver: liblinear
+  multi_class: ovr
+Best score: 0.000
+==================================================

@@ -18,6 +18,7 @@ from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.pipeline import Pipeline
 from tqdm import tqdm
 import sys
+import datetime
 
 # Suppress all warnings
 warnings.filterwarnings('ignore')
@@ -26,13 +27,69 @@ warnings.filterwarnings('ignore')
 from imblearn.over_sampling import SMOTE, ADASYN
 from imblearn.combine import SMOTETomek
 
-# Configure logging to exclude warnings
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+# Create logs directory if it doesn't exist
+os.makedirs('logs', exist_ok=True)
+
+# Generate a timestamp for the log file
+timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+log_file = f"logs/model_training_{timestamp}.txt"
+
+# Create a custom stream handler that writes to both console and file
+class TeeHandler(logging.Handler):
+    def __init__(self, file_handler, stream_handler):
+        super().__init__()
+        self.file_handler = file_handler
+        self.stream_handler = stream_handler
+    
+    def emit(self, record):
+        self.file_handler.emit(record)
+        self.stream_handler.emit(record)
+
+# Configure logging to write to both console and file
+file_handler = logging.FileHandler(log_file)
+stream_handler = logging.StreamHandler(sys.stdout)
+
+# Set formatter for both handlers
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+stream_handler.setFormatter(formatter)
+
+# Create the Tee handler
+tee_handler = TeeHandler(file_handler, stream_handler)
+
+# Configure the root logger
+logging.basicConfig(level=logging.INFO, handlers=[tee_handler])
 logger = logging.getLogger(__name__)
 
 # Filter out warning messages from logger
 logging.getLogger('py.warnings').setLevel(logging.ERROR)
+
+# Create a custom stdout to capture print statements
+class TeeStdout:
+    def __init__(self, original_stdout, log_file):
+        self.original_stdout = original_stdout
+        self.log_file = open(log_file, 'a')
+    
+    def write(self, message):
+        self.original_stdout.write(message)
+        self.log_file.write(message)
+        self.log_file.flush()
+    
+    def flush(self):
+        self.original_stdout.flush()
+        self.log_file.flush()
+    
+    def close(self):
+        if self.log_file:
+            self.log_file.close()
+
+# Redirect stdout to our custom version
+sys.stdout = TeeStdout(sys.stdout, log_file)
+
+# Configure tqdm to work with redirected stdout
+tqdm_out = sys.stdout
+
+logger.info(f"Logging to file: {log_file}")
 
 # Custom callback class for GridSearchCV progress tracking
 class ProgressCallback:
