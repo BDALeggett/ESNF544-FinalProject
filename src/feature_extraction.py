@@ -296,7 +296,7 @@ def visualize_features(image, features, edges, bbox, inner_region, thicknesses, 
     plt.tight_layout()
     plt.show()
 
-def test_feature_extraction(input_dir="ENSF 544\\Final-Project\\data\\processed", test_first_only=TEST_FIRST_ONLY, visualize=SHOW_VISUALIZATION):
+def test_feature_extraction(input_dir="data\\processed", test_first_only=TEST_FIRST_ONLY, visualize=SHOW_VISUALIZATION):
     abs_input_dir = os.path.abspath(input_dir)
     grade_folders = [os.path.join(abs_input_dir, f) for f in os.listdir(abs_input_dir)
                      if os.path.isdir(os.path.join(abs_input_dir, f))]
@@ -319,7 +319,7 @@ def test_feature_extraction(input_dir="ENSF 544\\Final-Project\\data\\processed"
             logger.info(f"{img_path} -> Features: {features}, Valid Mask: {valid_mask}")
             visualize_features(image, features, edges, bbox, inner_region, thicknesses, yellow_mask, grade_label, show=visualize)
 
-def save_feature_dataset(input_dir="ENSF 544\\Final-Project\\data\\processed", output_file="ENSF 544\\Final-Project\\data\\features\\features.npy.npz"):
+def save_feature_dataset(input_dir="data\\processed", output_file="data\\features\\features.npy.npz"):
     """
     For a 4-class setup:
       - 0 => All grades <= 7
@@ -392,4 +392,4 @@ if __name__ == "__main__":
     # test_feature_extraction("ENSF 544\\Final-Project\\data\\processed", test_first_only=TEST_FIRST_ONLY, visualize=SHOW_VISUALIZATION)
     
     # To save the dataset with cleaning:
-    save_feature_dataset(input_dir="ENSF 544\\Final-Project\\data\\processed", output_file="ENSF 544\\Final-Project\\data\\features\\features.npy.npz")
+    save_feature_dataset(input_dir="data\\processed", output_file="data\\features\\features.npy.npz")
