@@ -8,11 +8,168 @@ from PIL import Image, ImageTk
 import threading
 from predict_card_grade import predict_grade
 
+def highlight_card_defects(image_path, predictions):
+    """
+    Analyze the card image and highlight potential defects with red boxes
+    Returns the original image with highlighted defects
+    """
+    # Load the image
+    image = cv2.imread(image_path)
+    if image is None:
+        return None
+    
+    # Create a copy for highlighting
+    highlighted_image = image.copy()
+    
+    # Get predicted grade (use the top prediction)
+    if not predictions or len(predictions) < 1:
+        return highlighted_image
+    
+    top_model, top_grade, confidence = predictions[0]
+    
+    # Process the image to find the yellow border
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    lower_yellow = np.array([20, 100, 100], dtype=np.uint8)
+    upper_yellow = np.array([30, 255, 255], dtype=np.uint8)
+    yellow_mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+    
+    # Find contours of the yellow border
+    contours, _ = cv2.findContours(yellow_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if not contours:
+        return highlighted_image
+    
+    largest_contour = max(contours, key=cv2.contourArea)
+    x, y, w, h = cv2.boundingRect(largest_contour)
+    
+    # Different highlighting strategies based on grade
+    if top_grade == "≤7":
+        # For poor grades, highlight multiple issues
+        
+        # Check corners
+        corner_size = min(w, h) // 8
+        corners = [
+            (x, y, corner_size, corner_size),  # Top-left
+            (x + w - corner_size, y, corner_size, corner_size),  # Top-right
+            (x, y + h - corner_size, corner_size, corner_size),  # Bottom-left
+            (x + w - corner_size, y + h - corner_size, corner_size, corner_size)  # Bottom-right
+        ]
+        
+        # Highlight corners with issues
+        for cx, cy, cw, ch in corners:
+            corner_img = yellow_mask[cy:cy+ch, cx:cx+cw]
+            if corner_img.size > 0:
+                white_ratio = np.count_nonzero(corner_img) / corner_img.size
+                if white_ratio < 0.85:  # Less than 85% yellow in corner indicates damage
+                    cv2.rectangle(highlighted_image, (cx, cy), (cx+cw, cy+ch), (0, 0, 255), 2)
+        
+        # Highlight centering issues
+        left_border = x
+        right_border = image.shape[1] - (x + w)
+        top_border = y
+        bottom_border = image.shape[0] - (y + h)
+        
+        # If borders differ by more than 20%, highlight the smaller border
+        h_diff = abs(left_border - right_border) / max(left_border, right_border)
+        v_diff = abs(top_border - bottom_border) / max(top_border, bottom_border)
+        
+        if h_diff > 0.2:
+            if left_border < right_border:
+                cv2.rectangle(highlighted_image, (0, y), (x, y+h), (0, 0, 255), 2)
+            else:
+                cv2.rectangle(highlighted_image, (x+w, y), (image.shape[1], y+h), (0, 0, 255), 2)
+        
+        if v_diff > 0.2:
+            if top_border < bottom_border:
+                cv2.rectangle(highlighted_image, (x, 0), (x+w, y), (0, 0, 255), 2)
+            else:
+                cv2.rectangle(highlighted_image, (x, y+h), (x+w, image.shape[0]), (0, 0, 255), 2)
+                
+    elif top_grade == "8":
+        # For grade 8, highlight moderate issues
+        
+        # Check corners with less strict criteria
+        corner_size = min(w, h) // 10
+        corners = [
+            (x, y, corner_size, corner_size),  # Top-left
+            (x + w - corner_size, y, corner_size, corner_size),  # Top-right
+            (x, y + h - corner_size, corner_size, corner_size),  # Bottom-left
+            (x + w - corner_size, y + h - corner_size, corner_size, corner_size)  # Bottom-right
+        ]
+        
+        for cx, cy, cw, ch in corners:
+            corner_img = yellow_mask[cy:cy+ch, cx:cx+cw]
+            if corner_img.size > 0:
+                white_ratio = np.count_nonzero(corner_img) / corner_img.size
+                if white_ratio < 0.9:  # Slightly less strict threshold
+                    cv2.rectangle(highlighted_image, (cx, cy), (cx+cw, cy+ch), (0, 0, 255), 2)
+        
+        # Check for edge wear
+        edge_thickness = 5
+        edges = [
+            (x, y, w, edge_thickness),  # Top edge
+            (x, y, edge_thickness, h),  # Left edge
+            (x, y + h - edge_thickness, w, edge_thickness),  # Bottom edge
+            (x + w - edge_thickness, y, edge_thickness, h)  # Right edge
+        ]
+        
+        for ex, ey, ew, eh in edges:
+            edge_img = yellow_mask[ey:ey+eh, ex:ex+ew]
+            if edge_img.size > 0:
+                white_ratio = np.count_nonzero(edge_img) / edge_img.size
+                if white_ratio < 0.92:  # Less than 92% yellow on edge indicates wear
+                    cv2.rectangle(highlighted_image, (ex, ey), (ex+ew, ey+eh), (0, 0, 255), 2)
+                    
+    elif top_grade == "9":
+        # For grade 9, highlight minor issues
+        
+        # Check only specific areas for very minor issues
+        # Mainly just look at corners with stricter criteria
+        corner_size = min(w, h) // 12
+        corners = [
+            (x, y, corner_size, corner_size),  # Top-left
+            (x + w - corner_size, y, corner_size, corner_size),  # Top-right
+            (x, y + h - corner_size, corner_size, corner_size),  # Bottom-left
+            (x + w - corner_size, y + h - corner_size, corner_size, corner_size)  # Bottom-right
+        ]
+        
+        for cx, cy, cw, ch in corners:
+            corner_img = yellow_mask[cy:cy+ch, cx:cx+cw]
+            if corner_img.size > 0:
+                white_ratio = np.count_nonzero(corner_img) / corner_img.size
+                if white_ratio < 0.95:  # Very strict threshold
+                    cv2.rectangle(highlighted_image, (cx, cy), (cx+cw, cy+ch), (0, 0, 255), 2)
+                    
+        # Check for subtle centering issues
+        left_border = x
+        right_border = image.shape[1] - (x + w)
+        top_border = y
+        bottom_border = image.shape[0] - (y + h)
+        
+        # Much stricter centering criteria for grade 9
+        h_diff = abs(left_border - right_border) / max(left_border, right_border)
+        v_diff = abs(top_border - bottom_border) / max(top_border, bottom_border)
+        
+        if h_diff > 0.1:  # Only 10% difference allowed
+            if left_border < right_border:
+                cv2.rectangle(highlighted_image, (0, y), (x, y+h), (0, 0, 255), 2)
+            else:
+                cv2.rectangle(highlighted_image, (x+w, y), (image.shape[1], y+h), (0, 0, 255), 2)
+        
+        if v_diff > 0.1:
+            if top_border < bottom_border:
+                cv2.rectangle(highlighted_image, (x, 0), (x+w, y), (0, 0, 255), 2)
+            else:
+                cv2.rectangle(highlighted_image, (x, y+h), (x+w, image.shape[0]), (0, 0, 255), 2)
+    
+    # For grade 10, we don't highlight anything as it's near perfect
+    
+    return highlighted_image
+
 class PokemonCardGraderApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Pokemon Card Grader")
-        self.root.geometry("800x600")
+        self.root.geometry("800x700")
         self.root.configure(bg="#f0f0f0")
         
         # Set app icon if available
@@ -70,6 +227,16 @@ class PokemonCardGraderApp:
         )
         self.upload_button.pack(pady=10)
         
+        # Add highlight defects checkbox
+        self.highlight_var = tk.BooleanVar(value=False)
+        self.highlight_check = ttk.Checkbutton(
+            upload_frame,
+            text="Highlight Card Defects",
+            variable=self.highlight_var,
+            command=self.toggle_highlight
+        )
+        self.highlight_check.pack(pady=5)
+        
         # Status indicator
         self.status_var = tk.StringVar(value="Ready")
         self.status_label = ttk.Label(upload_frame, textvariable=self.status_var)
@@ -111,8 +278,11 @@ class PokemonCardGraderApp:
             font=("Helvetica", 8)
         ).pack(side=tk.RIGHT)
         
-        # Store the current image path
+        # Store the current image path and predictions
         self.current_image_path = None
+        self.current_predictions = None
+        self.original_image = None
+        self.highlighted_image = None
         
     def display_default_image(self):
         """Show a default placeholder image"""
@@ -151,14 +321,21 @@ class PokemonCardGraderApp:
         
         if file_path:
             self.current_image_path = file_path
-            self.display_image(file_path)
+            # Read the original image and store it
+            self.original_image = cv2.imread(file_path)
+            self.display_image(self.original_image)
             self.predict_card_grade(file_path)
     
-    def display_image(self, image_path):
-        """Display the selected image"""
+    def display_image(self, img):
+        """Display the given image"""
         try:
-            # Read and resize the image for display
-            img = cv2.imread(image_path)
+            if isinstance(img, str):
+                # If img is a path
+                img = cv2.imread(img)
+                if img is None:
+                    raise ValueError(f"Failed to load image from {img}")
+            
+            # Convert from BGR to RGB for PIL
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             
             # Get frame size
@@ -195,6 +372,26 @@ class PokemonCardGraderApp:
         except Exception as e:
             self.status_var.set(f"Error displaying image: {e}")
     
+    def toggle_highlight(self):
+        """Toggle between original and highlighted image"""
+        if not self.current_image_path or not self.current_predictions:
+            return
+            
+        if self.highlight_var.get():
+            # Show highlighted image
+            if self.highlighted_image is None:
+                # Generate highlighted image if not already done
+                self.highlighted_image = highlight_card_defects(self.current_image_path, self.current_predictions)
+            
+            if self.highlighted_image is not None:
+                self.display_image(self.highlighted_image)
+                self.status_var.set("Showing defects")
+        else:
+            # Show original image
+            if self.original_image is not None:
+                self.display_image(self.original_image)
+                self.status_var.set("Showing original image")
+    
     def predict_card_grade(self, image_path):
         """Run the prediction in a separate thread"""
         # Show progress and update status
@@ -205,6 +402,9 @@ class PokemonCardGraderApp:
         self.default_result_label.pack_forget()
         for i in self.result_tree.get_children():
             self.result_tree.delete(i)
+            
+        # Reset images
+        self.highlighted_image = None
         
         # Run prediction in a separate thread
         threading.Thread(target=self._run_prediction, args=(image_path,), daemon=True).start()
@@ -214,6 +414,7 @@ class PokemonCardGraderApp:
         try:
             # Get predictions
             predictions = predict_grade(image_path)
+            self.current_predictions = predictions
             
             # Update UI in the main thread
             self.root.after(0, lambda: self._update_results(predictions))
@@ -242,9 +443,21 @@ class PokemonCardGraderApp:
             self.result_tree.tag_configure('top', background='#e6f3ff')
             
             self.status_var.set("Prediction complete")
+            
+            # Enable the highlight checkbox
+            self.highlight_check.state(['!disabled'])
+            
+            # If highlight option is selected, generate and display highlighted image
+            if self.highlight_var.get():
+                self.highlighted_image = highlight_card_defects(self.current_image_path, predictions)
+                if self.highlighted_image is not None:
+                    self.display_image(self.highlighted_image)
+                    self.status_var.set("Showing defects")
         else:
             # Show error message
             self._show_error("Could not predict card grade")
+            # Disable the highlight checkbox
+            self.highlight_check.state(['disabled'])
     
     def _show_error(self, message):
         """Display error message"""
@@ -253,6 +466,8 @@ class PokemonCardGraderApp:
         self.default_result_label.configure(text=f"Error: {message}")
         self.default_result_label.pack(pady=20)
         self.result_tree.pack_forget()
+        # Disable the highlight checkbox
+        self.highlight_check.state(['disabled'])
 
 def main():
     root = tk.Tk()
