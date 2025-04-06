@@ -7,6 +7,7 @@ from tkinter import filedialog, ttk
 from PIL import Image, ImageTk
 import threading
 from predict_card_grade import predict_grade
+from crop_single_image import crop_pokemon_card
 
 def highlight_card_defects(image_path, predictions):
     """
@@ -387,8 +388,18 @@ class PokemonCardGraderApp:
             self.current_image_path = file_path
             # Read the original image and store it
             self.original_image = cv2.imread(file_path)
-            self.display_image(self.original_image)
-            self.predict_card_grade(file_path)
+            cropped_image = crop_pokemon_card(self.original_image)
+            if cropped_image is not None:
+                self.display_image(cropped_image)
+                cv2.imwrite("src/cropped_image.jpg", cropped_image)
+                self.current_image_path = "src/cropped_image.jpg"
+                print("Cropped image saved to cropped_image.jpg")
+                self.predict_card_grade("src/cropped_image.jpg")
+            else:
+                print("No cropped image to save")
+                self.display_image(self.current_image_path)
+                self.predict_card_grade(self.current_image_path)
+
     
     def display_image(self, img):
         """Display the given image"""
@@ -451,10 +462,9 @@ class PokemonCardGraderApp:
                 self.display_image(self.highlighted_image)
                 self.status_var.set("Showing defects")
         else:
-            # Show original image
-            if self.original_image is not None:
-                self.display_image(self.original_image)
-                self.status_var.set("Showing original image")
+            # Show cropped image instead of original image
+            self.display_image(self.current_image_path)
+            self.status_var.set("Showing cropped image")
     
     def predict_card_grade(self, image_path):
         """Run the prediction in a separate thread"""
