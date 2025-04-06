@@ -149,13 +149,36 @@ def segment_card(image, margin=0.1, debug=False):
         margin: Margin to add around detected bounding box
         debug: If True, return debug visualization
     """
-    result = find_border_bbox(image, margin=margin, debug=debug)
+
+    # Create a mask for the card using GrabCut algorithm
+    mask = np.zeros(image.shape[:2], np.uint8)
+    bgd_model = np.zeros((1, 65), np.float64)
+    fgd_model = np.zeros((1, 65), np.float64)
+    
+    # Initialize rectangle for GrabCut
+    h, w = image.shape[:2]
+    rect = (10, 10, w-20, h-20)  # Assume card is roughly centered in image
+    
+    # Apply GrabCut
+    cv2.grabCut(image, mask, rect, bgd_model, fgd_model, 5, cv2.GC_INIT_WITH_RECT)
+    
+    # Create mask where definite and probable foreground are set to 1
+    mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
+    
+    # Apply the mask to the image
+    image_no_bg = image.copy()
+    for c in range(0, 3):
+        image_no_bg[:, :, c] = image[:, :, c] * mask2
+
+    # display_image(image_no_bg, title="Card with Background Removed")
+    
+    result = find_border_bbox(image_no_bg, margin=margin, debug=debug)
     
     if debug and result is not None:
         bbox, debug_img, mask_vis = result
         x, y, w, h = bbox
         cropped = image[y:y+h, x:x+w]
-        return cropped, debug_img, mask_vis
+        return cropped, debug_img, mask_vis, image_no_bg
     
     if result is None:
         return None  # Indicate that no valid bounding box was found
