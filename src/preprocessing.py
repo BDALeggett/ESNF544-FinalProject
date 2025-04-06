@@ -8,17 +8,34 @@ from matplotlib import pyplot as plt
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-def find_border_bbox(image, margin=0.1, min_aspect_ratio=1.2):
+def find_border_bbox(image, margin=0.1, min_aspect_ratio=1.2, debug=False):
     """
-    Detect the bounding rectangle of the card's border by combining two color ranges:
+    Detect the bounding rectangle of the card's border by combining multiple color ranges:
       1) Typical "yellow" border
       2) Pale/brownish range (approx #d4c398)
+      3) Silver/gray range (for colorless/steel type cards)
+      4) Light gray with low saturation (for some EX cards)
     We then pick the bounding box that meets a vertical aspect ratio requirement 
     (height >= min_aspect_ratio * width).
     
     If found, returns (x, y, w, h). If not found, returns None.
+    
+    Args:
+        image: Input BGR image
+        margin: Margin to add around detected bounding box
+        min_aspect_ratio: Minimum height/width ratio for valid bounding box
+        debug: If True, return debug visualization
     """
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    
+    # Check for alpha channel and handle it
+    has_alpha = False
+    if image.shape[2] == 4:
+        has_alpha = True
+        # Extract alpha channel for additional mask processing
+        alpha_channel = image[:,:,3]
+        # Convert to standard BGR for main processing
+        image = image[:,:,:3]
 
     # Range #1: Typical yellow
     lower_yellow = np.array([15, 70, 70], dtype=np.uint8)
@@ -29,28 +46,74 @@ def find_border_bbox(image, margin=0.1, min_aspect_ratio=1.2):
     lower_brown = np.array([10, 40, 80], dtype=np.uint8)
     upper_brown = np.array([40, 180, 255], dtype=np.uint8)
     mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
+    
+    # Range #3: Silver/gray range for colorless cards (mid-range)
+    lower_gray1 = np.array([0, 0, 120], dtype=np.uint8)
+    upper_gray1 = np.array([180, 30, 200], dtype=np.uint8)
+    mask_gray1 = cv2.inRange(hsv, lower_gray1, upper_gray1)
+    
+    # Range #4: Light silver/gray range (brighter)
+    lower_gray2 = np.array([0, 0, 200], dtype=np.uint8)
+    upper_gray2 = np.array([180, 20, 255], dtype=np.uint8)
+    mask_gray2 = cv2.inRange(hsv, lower_gray2, upper_gray2)
+    
+    # Range #5: Darker gray/silver (for shadowed areas)
+    lower_gray3 = np.array([0, 0, 80], dtype=np.uint8)
+    upper_gray3 = np.array([180, 40, 140], dtype=np.uint8)
+    mask_gray3 = cv2.inRange(hsv, lower_gray3, upper_gray3)
 
-    # Combine both masks
-    mask = cv2.bitwise_or(mask_yellow, mask_brown)
-
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    if not contours:
-        logger.warning("No border contours found for either color range.")
+    # Combine masks for processing
+    mask_yellow_brown = cv2.bitwise_or(mask_yellow, mask_brown)
+    mask_all_grays = cv2.bitwise_or(cv2.bitwise_or(mask_gray1, mask_gray2), mask_gray3)
+    
+    # Process each mask separately to find the best bounding box
+    contour_sets = []
+    
+    # Try yellow+brown mask (original approach)
+    contours_yellow_brown, _ = cv2.findContours(mask_yellow_brown, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if contours_yellow_brown:
+        contour_sets.append(("yellow/brown", contours_yellow_brown))
+    
+    # Try combined gray masks for better detection
+    contours_gray, _ = cv2.findContours(mask_all_grays, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if contours_gray:
+        contour_sets.append(("gray", contours_gray))
+    
+    # Try combined mask as fallback
+    if not contour_sets:
+        mask_combined = cv2.bitwise_or(mask_yellow_brown, mask_all_grays)
+        contours_combined, _ = cv2.findContours(mask_combined, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if contours_combined:
+            contour_sets.append(("combined", contours_combined))
+    
+    if not contour_sets:
+        logger.warning("No border contours found for any color range.")
         return None
-
-    # Filter by vertical aspect ratio
-    valid_bboxes = []
-    for cnt in contours:
-        x, y, w, h = cv2.boundingRect(cnt)
-        if h >= min_aspect_ratio * w:
-            valid_bboxes.append((x, y, w, h))
-
-    if not valid_bboxes:
+    
+    # Process each set of contours to find valid bounding boxes
+    all_valid_bboxes = []
+    
+    for name, contours in contour_sets:
+        # Filter by vertical aspect ratio
+        valid_bboxes = []
+        for cnt in contours:
+            x, y, w, h = cv2.boundingRect(cnt)
+            # More permissive area filtering to catch edge cases
+            if h >= min_aspect_ratio * w and w * h > 1000:  # Minimum area to avoid noise
+                valid_bboxes.append((x, y, w, h))
+        
+        if valid_bboxes:
+            # Find the largest valid bbox for this color set
+            best_bbox = max(valid_bboxes, key=lambda b: b[2] * b[3])
+            all_valid_bboxes.append((name, best_bbox))
+    
+    if not all_valid_bboxes:
         logger.warning("No contours with sufficient vertical aspect ratio found.")
         return None
 
-    # Choose bounding box with largest area
-    x, y, w, h = max(valid_bboxes, key=lambda b: b[2] * b[3])
+    # Choose bounding box with largest area among all color sets
+    color, (x, y, w, h) = max(all_valid_bboxes, key=lambda item: item[1][2] * item[1][3])
+    logger.info(f"Selected bounding box from {color} color range")
 
     # Expand the bounding box by margin
     margin_w = int(w * margin)
@@ -60,17 +123,44 @@ def find_border_bbox(image, margin=0.1, min_aspect_ratio=1.2):
     w_expanded = min(image.shape[1] - x_expanded, w + 2 * margin_w)
     h_expanded = min(image.shape[0] - y_expanded, h + 2 * margin_h)
 
+    # If debug is enabled, create a visualization
+    if debug:
+        debug_img = image.copy()
+        # Draw the final bounding box
+        cv2.rectangle(debug_img, (x_expanded, y_expanded), 
+                     (x_expanded + w_expanded, y_expanded + h_expanded), (0, 255, 0), 2)
+        
+        # Create visualizations of the masks
+        mask_vis = np.zeros((image.shape[0], image.shape[1], 3), dtype=np.uint8)
+        mask_vis[:,:,0] = mask_all_grays  # Blue channel for gray mask
+        mask_vis[:,:,1] = mask_yellow_brown  # Green channel for yellow/brown mask
+        
+        return (x_expanded, y_expanded, w_expanded, h_expanded), debug_img, mask_vis
+
     return (x_expanded, y_expanded, w_expanded, h_expanded)
 
-def segment_card(image, margin=0.1):
+def segment_card(image, margin=0.1, debug=False):
     """
     Crop the image based on the bounding rectangle of the merged color ranges.
     Returns the cropped image if found; otherwise returns None (meaning skip).
+    
+    Args:
+        image: Input image
+        margin: Margin to add around detected bounding box
+        debug: If True, return debug visualization
     """
-    bbox = find_border_bbox(image, margin=margin)
-    if bbox is None:
+    result = find_border_bbox(image, margin=margin, debug=debug)
+    
+    if debug and result is not None:
+        bbox, debug_img, mask_vis = result
+        x, y, w, h = bbox
+        cropped = image[y:y+h, x:x+w]
+        return cropped, debug_img, mask_vis
+    
+    if result is None:
         return None  # Indicate that no valid bounding box was found
-    x, y, w, h = bbox
+    
+    x, y, w, h = result
     return image[y:y+h, x:x+w]
 
 def valid_card_dimensions(cropped, min_aspect=1.3, max_aspect=1.5, min_width=100, min_height=150):
