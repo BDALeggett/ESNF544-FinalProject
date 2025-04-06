@@ -10,7 +10,8 @@ from predict_card_grade import predict_grade
 
 def highlight_card_defects(image_path, predictions):
     """
-    Analyze the card image and highlight potential defects with red boxes
+    Analyze the card image and highlight actual physical defects such as
+    corner wear, scratches, and edge damage
     Returns the original image with highlighted defects
     """
     # Load the image
@@ -21,147 +22,210 @@ def highlight_card_defects(image_path, predictions):
     # Create a copy for highlighting
     highlighted_image = image.copy()
     
-    # Get predicted grade (use the top prediction)
-    if not predictions or len(predictions) < 1:
-        return highlighted_image
+    # Convert to grayscale for easier processing
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     
-    top_model, top_grade, confidence = predictions[0]
+    # Use edge detection to find the overall card first (not just yellow border)
+    edges = cv2.Canny(gray, 50, 150)
+    edges = cv2.dilate(edges, None, iterations=1)
     
-    # Process the image to find the yellow border
+    # Find contours of the entire card
+    card_contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if not card_contours:
+        # Fall back to yellow border detection if card detection fails
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        lower_yellow = np.array([20, 100, 100], dtype=np.uint8)
+        upper_yellow = np.array([30, 255, 255], dtype=np.uint8)
+        yellow_mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+        
+        contours, _ = cv2.findContours(yellow_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if not contours:
+            return highlighted_image
+        
+        largest_contour = max(contours, key=cv2.contourArea)
+        x, y, w, h = cv2.boundingRect(largest_contour)
+    else:
+        # Use the largest contour as the card
+        largest_card_contour = max(card_contours, key=cv2.contourArea)
+        x, y, w, h = cv2.boundingRect(largest_card_contour)
+    
+    # Find the yellow border for defect analysis
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     lower_yellow = np.array([20, 100, 100], dtype=np.uint8)
     upper_yellow = np.array([30, 255, 255], dtype=np.uint8)
     yellow_mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
     
-    # Find contours of the yellow border
-    contours, _ = cv2.findContours(yellow_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    if not contours:
-        return highlighted_image
+    # 1. DETECT CORNER WEAR - IMPROVED METHOD
+    # Calculate corner size based on card dimensions
+    corner_size = min(w, h) // 7  # Slightly larger to ensure we get the entire corner
     
-    largest_contour = max(contours, key=cv2.contourArea)
-    x, y, w, h = cv2.boundingRect(largest_contour)
+    # Find the actual corners of the card using corner detection
+    corners_harris = cv2.cornerHarris(gray, 5, 3, 0.04)
+    corners_norm = cv2.normalize(corners_harris, None, 0, 255, cv2.NORM_MINMAX)
+    corners_norm = np.uint8(corners_norm)
     
-    # Different highlighting strategies based on grade
-    if top_grade == "≤7":
-        # For poor grades, highlight multiple issues
+    # Threshold for corner detection
+    _, corners_thresh = cv2.threshold(corners_norm, 100, 255, cv2.THRESH_BINARY)
+    
+    # Find coordinates of corner points
+    corner_coords = []
+    corner_regions = []
+    
+    # Define the corner regions first
+    tl_region = gray[y:y+corner_size, x:x+corner_size]
+    tr_region = gray[y:y+corner_size, x+w-corner_size:x+w]
+    bl_region = gray[y+h-corner_size:y+h, x:x+corner_size]
+    br_region = gray[y+h-corner_size:y+h, x+w-corner_size:x+w]
+    
+    corner_regions = [
+        {"region": tl_region, "pos": (x, y), "name": "Top-left"},
+        {"region": tr_region, "pos": (x+w-corner_size, y), "name": "Top-right"},
+        {"region": bl_region, "pos": (x, y+h-corner_size), "name": "Bottom-left"},
+        {"region": br_region, "pos": (x+w-corner_size, y+h-corner_size), "name": "Bottom-right"}
+    ]
+    
+    for corner in corner_regions:
+        if corner["region"].size == 0:
+            continue
+            
+        # Apply Canny edge detection to find edges in the corner
+        cx, cy = corner["pos"]
+        cw, ch = corner_size, corner_size
         
-        # Check corners
-        corner_size = min(w, h) // 8
-        corners = [
-            (x, y, corner_size, corner_size),  # Top-left
-            (x + w - corner_size, y, corner_size, corner_size),  # Top-right
-            (x, y + h - corner_size, corner_size, corner_size),  # Bottom-left
-            (x + w - corner_size, y + h - corner_size, corner_size, corner_size)  # Bottom-right
-        ]
+        # Extract corner region for yellow mask check
+        corner_mask = yellow_mask[cy:cy+ch, cx:cx+cw]
+        corner_edges = cv2.Canny(corner["region"], 80, 200)
         
-        # Highlight corners with issues
-        for cx, cy, cw, ch in corners:
-            corner_img = yellow_mask[cy:cy+ch, cx:cx+cw]
-            if corner_img.size > 0:
-                white_ratio = np.count_nonzero(corner_img) / corner_img.size
-                if white_ratio < 0.85:  # Less than 85% yellow in corner indicates damage
-                    cv2.rectangle(highlighted_image, (cx, cy), (cx+cw, cy+ch), (0, 0, 255), 2)
+        # Count edge pixels - more edges can indicate wear
+        edge_pixel_count = np.count_nonzero(corner_edges)
         
-        # Highlight centering issues
-        left_border = x
-        right_border = image.shape[1] - (x + w)
-        top_border = y
-        bottom_border = image.shape[0] - (y + h)
+        # Calculate edge density
+        if corner["region"].size > 0:
+            edge_density = edge_pixel_count / corner["region"].size
+        else:
+            edge_density = 0
         
-        # If borders differ by more than 20%, highlight the smaller border
-        h_diff = abs(left_border - right_border) / max(left_border, right_border)
-        v_diff = abs(top_border - bottom_border) / max(top_border, bottom_border)
+        # Check corner yellow mask for completeness
+        if corner_mask.size > 0:
+            yellow_ratio = np.count_nonzero(corner_mask) / corner_mask.size
+            
+            # If corner has high edge density or missing yellow border, it may be worn
+            if edge_density > 0.05 or yellow_ratio < 0.9:
+                cv2.rectangle(highlighted_image, (cx, cy), (cx+cw, cy+ch), (0, 0, 255), 2)
+                cv2.putText(highlighted_image, "Corner wear", (cx, cy-5), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+    
+    # 2. DETECT EDGE DAMAGE
+    edge_thickness = 5
+    edges = [
+        (x, y, w, edge_thickness),  # Top edge
+        (x, y, edge_thickness, h),  # Left edge
+        (x, y + h - edge_thickness, w, edge_thickness),  # Bottom edge
+        (x + w - edge_thickness, y, edge_thickness, h)  # Right edge
+    ]
+    
+    edge_names = ["Top", "Left", "Bottom", "Right"]
+    
+    for i, (ex, ey, ew, eh) in enumerate(edges):
+        # Extract edge region
+        edge_region = gray[ey:ey+eh, ex:ex+ew]
+        if edge_region.size == 0:
+            continue
+            
+        # Apply edge detection
+        edge_edges = cv2.Canny(edge_region, 100, 200)
         
-        if h_diff > 0.2:
-            if left_border < right_border:
-                cv2.rectangle(highlighted_image, (0, y), (x, y+h), (0, 0, 255), 2)
-            else:
-                cv2.rectangle(highlighted_image, (x+w, y), (image.shape[1], y+h), (0, 0, 255), 2)
-        
-        if v_diff > 0.2:
-            if top_border < bottom_border:
-                cv2.rectangle(highlighted_image, (x, 0), (x+w, y), (0, 0, 255), 2)
-            else:
-                cv2.rectangle(highlighted_image, (x, y+h), (x+w, image.shape[0]), (0, 0, 255), 2)
+        # Check edge completeness in yellow mask
+        edge_mask = yellow_mask[ey:ey+eh, ex:ex+ew]
+        if edge_mask.size > 0:
+            yellow_ratio = np.count_nonzero(edge_mask) / edge_mask.size
+            
+            # If edge has incomplete yellow border, highlight it
+            if yellow_ratio < 0.92:
+                cv2.rectangle(highlighted_image, (ex, ey), (ex+ew, ey+eh), (0, 0, 255), 2)
+                # Position the text based on which edge
+                if i == 0:  # Top
+                    text_pos = (ex + ew//2 - 40, ey - 5)
+                elif i == 1:  # Left
+                    text_pos = (ex - 5, ey + eh//2)
+                elif i == 2:  # Bottom
+                    text_pos = (ex + ew//2 - 40, ey + eh + 15)
+                else:  # Right
+                    text_pos = (ex + ew + 5, ey + eh//2)
                 
-    elif top_grade == "8":
-        # For grade 8, highlight moderate issues
-        
-        # Check corners with less strict criteria
-        corner_size = min(w, h) // 10
-        corners = [
-            (x, y, corner_size, corner_size),  # Top-left
-            (x + w - corner_size, y, corner_size, corner_size),  # Top-right
-            (x, y + h - corner_size, corner_size, corner_size),  # Bottom-left
-            (x + w - corner_size, y + h - corner_size, corner_size, corner_size)  # Bottom-right
-        ]
-        
-        for cx, cy, cw, ch in corners:
-            corner_img = yellow_mask[cy:cy+ch, cx:cx+cw]
-            if corner_img.size > 0:
-                white_ratio = np.count_nonzero(corner_img) / corner_img.size
-                if white_ratio < 0.9:  # Slightly less strict threshold
-                    cv2.rectangle(highlighted_image, (cx, cy), (cx+cw, cy+ch), (0, 0, 255), 2)
-        
-        # Check for edge wear
-        edge_thickness = 5
-        edges = [
-            (x, y, w, edge_thickness),  # Top edge
-            (x, y, edge_thickness, h),  # Left edge
-            (x, y + h - edge_thickness, w, edge_thickness),  # Bottom edge
-            (x + w - edge_thickness, y, edge_thickness, h)  # Right edge
-        ]
-        
-        for ex, ey, ew, eh in edges:
-            edge_img = yellow_mask[ey:ey+eh, ex:ex+ew]
-            if edge_img.size > 0:
-                white_ratio = np.count_nonzero(edge_img) / edge_img.size
-                if white_ratio < 0.92:  # Less than 92% yellow on edge indicates wear
-                    cv2.rectangle(highlighted_image, (ex, ey), (ex+ew, ey+eh), (0, 0, 255), 2)
-                    
-    elif top_grade == "9":
-        # For grade 9, highlight minor issues
-        
-        # Check only specific areas for very minor issues
-        # Mainly just look at corners with stricter criteria
-        corner_size = min(w, h) // 12
-        corners = [
-            (x, y, corner_size, corner_size),  # Top-left
-            (x + w - corner_size, y, corner_size, corner_size),  # Top-right
-            (x, y + h - corner_size, corner_size, corner_size),  # Bottom-left
-            (x + w - corner_size, y + h - corner_size, corner_size, corner_size)  # Bottom-right
-        ]
-        
-        for cx, cy, cw, ch in corners:
-            corner_img = yellow_mask[cy:cy+ch, cx:cx+cw]
-            if corner_img.size > 0:
-                white_ratio = np.count_nonzero(corner_img) / corner_img.size
-                if white_ratio < 0.95:  # Very strict threshold
-                    cv2.rectangle(highlighted_image, (cx, cy), (cx+cw, cy+ch), (0, 0, 255), 2)
-                    
-        # Check for subtle centering issues
-        left_border = x
-        right_border = image.shape[1] - (x + w)
-        top_border = y
-        bottom_border = image.shape[0] - (y + h)
-        
-        # Much stricter centering criteria for grade 9
-        h_diff = abs(left_border - right_border) / max(left_border, right_border)
-        v_diff = abs(top_border - bottom_border) / max(top_border, bottom_border)
-        
-        if h_diff > 0.1:  # Only 10% difference allowed
-            if left_border < right_border:
-                cv2.rectangle(highlighted_image, (0, y), (x, y+h), (0, 0, 255), 2)
-            else:
-                cv2.rectangle(highlighted_image, (x+w, y), (image.shape[1], y+h), (0, 0, 255), 2)
-        
-        if v_diff > 0.1:
-            if top_border < bottom_border:
-                cv2.rectangle(highlighted_image, (x, 0), (x+w, y), (0, 0, 255), 2)
-            else:
-                cv2.rectangle(highlighted_image, (x, y+h), (x+w, image.shape[0]), (0, 0, 255), 2)
+                cv2.putText(highlighted_image, f"{edge_names[i]} edge wear", text_pos, 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
     
-    # For grade 10, we don't highlight anything as it's near perfect
+    # 3. DETECT SCRATCHES ON CARD SURFACE
+    # Extract the card surface (avoid the borders)
+    inner_margin = 20
+    card_surface = gray[y+inner_margin:y+h-inner_margin, x+inner_margin:x+w-inner_margin]
+    
+    if card_surface.size > 0:
+        # Use Canny edge detection with lower threshold to find subtle scratches
+        surface_edges = cv2.Canny(card_surface, 50, 150)
+        
+        # Apply morphological operations to connect broken lines (potential scratches)
+        kernel = np.ones((3, 3), np.uint8)
+        surface_edges = cv2.dilate(surface_edges, kernel, iterations=1)
+        
+        # Find contours of potential scratches
+        scratch_contours, _ = cv2.findContours(surface_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        for contour in scratch_contours:
+            # Filter by size and shape to identify likely scratches
+            area = cv2.contourArea(contour)
+            perimeter = cv2.arcLength(contour, True)
+            
+            # Calculate aspect ratio of the bounding rect
+            x_s, y_s, w_s, h_s = cv2.boundingRect(contour)
+            aspect_ratio = max(w_s, h_s) / (min(w_s, h_s) + 0.01)  # Avoid division by zero
+            
+            # Scratches typically have small area but large aspect ratio
+            # and small area-to-perimeter ratio
+            if area > 5 and aspect_ratio > 3 and area / (perimeter + 0.01) < 1.0:
+                # Adjust coordinates to the full image
+                contour[:, :, 0] += x + inner_margin
+                contour[:, :, 1] += y + inner_margin
+                
+                # Draw the scratch contour
+                cv2.drawContours(highlighted_image, [contour], 0, (0, 0, 255), 2)
+                
+                # Add label
+                rect_x, rect_y, rect_w, rect_h = cv2.boundingRect(contour)
+                cv2.putText(highlighted_image, "Scratch", (rect_x, rect_y-5), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+    
+    # 4. CHECK CENTERING ISSUES
+    left_border = x
+    right_border = image.shape[1] - (x + w)
+    top_border = y
+    bottom_border = image.shape[0] - (y + h)
+    
+    # Calculate horizontal and vertical border differences
+    h_diff = abs(left_border - right_border) / max(left_border, right_border, 1)
+    v_diff = abs(top_border - bottom_border) / max(top_border, bottom_border, 1)
+    
+    # If centering is off by more than 15%, highlight it
+    if h_diff > 0.15:
+        if left_border < right_border:
+            cv2.rectangle(highlighted_image, (0, y), (x, y+h), (0, 165, 255), 2)
+            cv2.putText(highlighted_image, "Left centering", (5, y+h//2), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 165, 255), 1)
+        else:
+            cv2.rectangle(highlighted_image, (x+w, y), (image.shape[1], y+h), (0, 165, 255), 2)
+            cv2.putText(highlighted_image, "Right centering", (x+w+5, y+h//2), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 165, 255), 1)
+    
+    if v_diff > 0.15:
+        if top_border < bottom_border:
+            cv2.rectangle(highlighted_image, (x, 0), (x+w, y), (0, 165, 255), 2)
+            cv2.putText(highlighted_image, "Top centering", (x+w//2-40, y-5), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 165, 255), 1)
+        else:
+            cv2.rectangle(highlighted_image, (x, y+h), (x+w, image.shape[0]), (0, 165, 255), 2)
+            cv2.putText(highlighted_image, "Bottom centering", (x+w//2-40, image.shape[0]-5), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 165, 255), 1)
     
     return highlighted_image
 
