@@ -54,7 +54,7 @@ This project follows a structured machine learning pipeline:
 
 ## Usage: 
 
-** Note some folder paths may need to be updated from the placeholders for input-output paths in the feature_extraction, model_training an dpreprocessing files. **
+**Note some folder paths may need to be updated from the placeholders for input-output paths in the feature_extraction, model_training an dpreprocessing files.**
 
 ### Step 1: Feature Extraction
 
@@ -98,6 +98,40 @@ This project follows a structured machine learning pipeline:
    - Perform hyperparameter tuning for Logistic Regression, Random Forest, and SVM (using pipelines for models that require scaling).
    - Evaluate each tuned model using stratified cross-validation with oversampling.
    - Log metrics (accuracy, macro F1, precision, and recall) for each fold and print an averaged confusion matrix plot for each model.
+
+### Step 3: Running the Card Grader GUI
+
+To use the Pokemon Card Grader application:
+
+1. **Train the Models:**
+   First, ensure you have completed the feature extraction and have the feature dataset ready. Then run:
+   ```bash
+   python src/train_and_save_models.py
+   ```
+   This will:
+   - Load the feature dataset
+   - Train the machine learning models (Random Forest, SVM, and Logistic Regression)
+   - Save the trained models to the `models` directory
+
+2. **Launch the GUI:**
+   After the models are trained and saved, run:
+   ```bash
+   python src/card_grade_gui.py
+   ```
+   This will launch the Pokemon Card Grader GUI where you can:
+   - Upload card images
+   - View grade predictions from multiple models
+   - See confidence scores for each prediction
+   - Toggle defect highlighting to visualize card issues
+
+3. **Using the GUI:**
+   - Click "Upload Card Image" to select a Pokemon card image
+   - The system will automatically crop and process the image
+   - View predictions from all trained models
+   - Use the "Highlight Card Defects" checkbox to visualize areas that may have contributed to the grade
+   - The top prediction is highlighted in the results table
+
+Note: Make sure to run `train_and_save_models.py` before launching the GUI, as the GUI requires the trained models to make predictions.
 
 ---
 
