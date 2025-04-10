@@ -1,3 +1,4 @@
+# Import necessary libraries for image processing, data handling, and visualization
 import os
 import cv2
 import numpy as np
@@ -5,20 +6,24 @@ import logging
 from glob import glob
 from matplotlib import pyplot as plt
 
-# Configure logging
+# Configure logging to display informative messages
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Global flags for testing and visualization
-TEST_FIRST_ONLY = True    # Process only the first image per grade folder for quick testing
-SHOW_VISUALIZATION = True  # Set to False to disable plotting in production
-
-#############################
-# Helper functions for border & inner region extraction
-#############################
+# Global configuration flags
+TEST_FIRST_ONLY = True  # Only test the first image in each folder
+SHOW_VISUALIZATION = True  # Show visualization of feature extraction
 
 def get_yellow_mask(image):
+    """Extract a mask of yellow regions from the image using HSV color space.
+    
+    Args:
+        image (numpy.ndarray): Input BGR image
+    
+    Returns:
+        numpy.ndarray: Binary mask where yellow regions are white
+    """
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     lower_yellow = np.array([20, 100, 100], dtype=np.uint8)
     upper_yellow = np.array([30, 255, 255], dtype=np.uint8)
@@ -26,11 +31,27 @@ def get_yellow_mask(image):
     return mask
 
 def get_edge_map(image):
+    """Detect edges in the image using Canny edge detection.
+    
+    Args:
+        image (numpy.ndarray): Input BGR image
+    
+    Returns:
+        numpy.ndarray: Binary edge map
+    """
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(gray, 50, 150)
     return edges
 
 def find_largest_contour(mask):
+    """Find the largest contour in the binary mask.
+    
+    Args:
+        mask (numpy.ndarray): Binary mask
+    
+    Returns:
+        tuple: (largest_contour, bounding_box) or (None, None) if no contours found
+    """
     contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if not contours:
         logger.warning("No contours found in the yellow mask.")
@@ -40,6 +61,15 @@ def find_largest_contour(mask):
     return largest, bbox
 
 def measure_thickness(mask, direction):
+    """Measure the thickness of the border in a specific direction.
+    
+    Args:
+        mask (numpy.ndarray): Binary mask
+        direction (str): One of 'top', 'bottom', 'left', 'right'
+    
+    Returns:
+        int: Thickness of the border in pixels
+    """
     h, w = mask.shape
     if direction == 'top':
         for i in range(h):
@@ -63,6 +93,15 @@ def measure_thickness(mask, direction):
         return w
 
 def get_inner_region(image, mask):
+    """Extract the inner region of the card by removing the border.
+    
+    Args:
+        image (numpy.ndarray): Input BGR image
+        mask (numpy.ndarray): Binary mask of the card
+    
+    Returns:
+        tuple: (inner_region, thicknesses) where thicknesses is (top, bottom, left, right)
+    """
     coords = cv2.findNonZero(mask)
     if coords is None:
         logger.warning("No yellow border detected; cannot compute inner region.")
@@ -78,11 +117,15 @@ def get_inner_region(image, mask):
     inner = image[y+top:y+h-bottom, x+left:x+w-right]
     return inner, (top, bottom, left, right)
 
-#############################
-# Metrics Computation 
-#############################
-
 def compute_border_continuity(mask):
+    """Compute a score for the continuity of the card's border.
+    
+    Args:
+        mask (numpy.ndarray): Binary mask of the card
+    
+    Returns:
+        float: Score between 0 and 10
+    """
     coords = cv2.findNonZero(mask)
     if coords is None:
         return 0.0
@@ -94,6 +137,16 @@ def compute_border_continuity(mask):
     return score
 
 def compute_corner_quality(mask, bbox, patch_size=20):
+    """Compute a score for the quality of the card's corners.
+    
+    Args:
+        mask (numpy.ndarray): Binary mask of the card
+        bbox (tuple): Bounding box (x, y, w, h)
+        patch_size (int): Size of corner patches to analyze
+    
+    Returns:
+        float: Score between 0 and 10
+    """
     x, y, w, h = bbox
     patches = [
         mask[y:y+patch_size, x:x+patch_size],
@@ -112,6 +165,15 @@ def compute_corner_quality(mask, bbox, patch_size=20):
     return score
 
 def compute_centering(mask, threshold_diff=5):
+    """Compute a score for the card's centering.
+    
+    Args:
+        mask (numpy.ndarray): Binary mask of the card
+        threshold_diff (float): Maximum allowed difference in border thickness
+    
+    Returns:
+        float: Score between 0 and 10
+    """
     top = measure_thickness(mask, 'top')
     bottom = measure_thickness(mask, 'bottom')
     left = measure_thickness(mask, 'left')
@@ -123,6 +185,15 @@ def compute_centering(mask, threshold_diff=5):
     return score
 
 def compute_inner_cleanliness(inner_region, threshold=50):
+    """Compute a score for the cleanliness of the card's inner region.
+    
+    Args:
+        inner_region (numpy.ndarray): Inner region of the card
+        threshold (float): Threshold for standard deviation
+    
+    Returns:
+        float: Score between 0 and 10
+    """
     if inner_region is None:
         return 0.0
     gray = cv2.cvtColor(inner_region, cv2.COLOR_BGR2GRAY)
@@ -131,10 +202,15 @@ def compute_inner_cleanliness(inner_region, threshold=50):
     return score
 
 def compute_grading_index(image, expected_grade=None, alpha=0.5):
-    """
-    Compute a grading index based on average saturation.
-    Maps average saturation from [50, 200] to a 0–10 score.
-    If expected_grade is provided, blends the computed score with the expected grade.
+    """Compute a grading index based on image saturation and expected grade.
+    
+    Args:
+        image (numpy.ndarray): Input BGR image
+        expected_grade (float, optional): Expected grade of the card
+        alpha (float): Weight for computed score vs expected grade
+    
+    Returns:
+        float: Score between 0 and 10
     """
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     avg_sat = np.mean(hsv[:, :, 1])
@@ -147,55 +223,59 @@ def compute_grading_index(image, expected_grade=None, alpha=0.5):
     return computed_score
 
 def compute_edge_density(inner_region):
-    """
-    Compute the edge density in the inner region using Canny edge detection.
-    Returns a score on a 0–10 scale.
+    """Compute a score for the edge density in the inner region.
+    
+    Args:
+        inner_region (numpy.ndarray): Inner region of the card
+    
+    Returns:
+        float: Score between 0 and 10, or None if inner_region is None
     """
     if inner_region is None:
         return None
     edges_inner = cv2.Canny(inner_region, 50, 150)
     density = np.count_nonzero(edges_inner) / edges_inner.size
-    # Scale density to [0,10]; adjust the scaling factor as needed.
     score = min(10, density * 100)
     return score
 
 def compute_saturation_variance(image):
-    """
-    Compute the variance of the saturation channel from the HSV representation of the image.
-    We map the variance to a 0–10 score inversely: more variance might indicate inconsistent printing.
-    Here, we assume a variance range up to about 1000.
+    """Compute a score based on the variance of saturation in the image.
+    
+    Args:
+        image (numpy.ndarray): Input BGR image
+    
+    Returns:
+        float: Score between 0 and 10
     """
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     var_sat = np.var(hsv[:, :, 1])
-    # Inverse mapping: lower variance yields higher score.
     score = 10 - min(10, var_sat / 1000 * 10)
     return score
 
-#############################
-# Main Feature Extraction Function 
-#############################
-
 def extract_all_features(image, expected_grade=None):
-    """
-    Extract features from the processed image (with yellow border).
-    Computes seven features:
-      1. Border Continuity
-      2. Corner Quality
-      3. Centering
-      4. Inner Cleanliness
-      5. Grading Index
-      6. Edge Density (in inner region)
-      7. Saturation Variance (from the full image)
+    """Extract all features from a card image.
     
-    If any metric is missing, it is replaced by the average of available metrics.
+    This function computes multiple features that are important for card grading:
+    1. Border continuity
+    2. Corner quality
+    3. Centering
+    4. Inner cleanliness
+    5. Grading index
+    6. Edge density
+    7. Saturation variance
+    
+    Args:
+        image (numpy.ndarray): Input BGR image
+        expected_grade (float, optional): Expected grade of the card
+    
     Returns:
-      - features: list of 7 feature values
-      - intermediate outputs: edges, bbox, inner_region, thicknesses, yellow_mask
+        tuple: (features, valid_mask, edges, bbox, inner_region, thicknesses, yellow_mask)
     """
     yellow_mask = get_yellow_mask(image)
     edges = get_edge_map(image)
     _, bbox = find_largest_contour(yellow_mask)
     
+    # Compute various feature scores
     continuity = compute_border_continuity(yellow_mask) if bbox is not None else None
     corner_quality = compute_corner_quality(yellow_mask, bbox, patch_size=20) if bbox is not None else None
     centering = compute_centering(yellow_mask, threshold_diff=5) if bbox is not None else None
@@ -205,14 +285,14 @@ def extract_all_features(image, expected_grade=None):
     edge_density = compute_edge_density(inner_region)
     sat_variance = compute_saturation_variance(image)
     
+    # Combine features and handle missing values
     raw_features = [continuity, corner_quality, centering, cleanliness, grading_index, edge_density, sat_variance]
-    # Build a validity mask: True if feature is not None, else False.
     valid_mask = [f is not None for f in raw_features]
     valid_values = [f for f in raw_features if f is not None]
     avg_value = sum(valid_values) / len(valid_values) if valid_values else 0.0
     features = [float(f) if f is not None else avg_value for f in raw_features]
     
-    # Ensure feature vector has exactly 7 elements and valid_mask too.
+    # Ensure consistent feature length
     if len(features) != 7:
         if len(features) > 7:
             features = features[:7]
@@ -223,11 +303,17 @@ def extract_all_features(image, expected_grade=None):
     
     return features, valid_mask, edges, bbox, inner_region, thicknesses, yellow_mask
 
-#############################
-# Data Cleaning Function 
-#############################
-
 def clean_feature_matrix(X, valid_masks, threshold=0.3):
+    """Clean the feature matrix by removing features with too many missing values.
+    
+    Args:
+        X (numpy.ndarray): Feature matrix
+        valid_masks (numpy.ndarray): Boolean masks indicating valid features
+        threshold (float): Minimum proportion of valid values required
+    
+    Returns:
+        tuple: (cleaned_X, keep_indices)
+    """
     X = np.array(X)
     valid_masks = np.array(valid_masks)
     n_samples, n_features = X.shape
@@ -244,11 +330,20 @@ def clean_feature_matrix(X, valid_masks, threshold=0.3):
     cleaned_X = X[:, keep_indices]
     return cleaned_X, keep_indices
 
-#############################
-# Visualization & Testing Functions 
-#############################
-
 def visualize_features(image, features, edges, bbox, inner_region, thicknesses, yellow_mask, grade_label=None, show=True):
+    """Visualize the extracted features and processing steps.
+    
+    Args:
+        image (numpy.ndarray): Original image
+        features (list): Extracted features
+        edges (numpy.ndarray): Edge map
+        bbox (tuple): Bounding box
+        inner_region (numpy.ndarray): Inner region
+        thicknesses (tuple): Border thicknesses
+        yellow_mask (numpy.ndarray): Yellow mask
+        grade_label (str, optional): Expected grade label
+        show (bool): Whether to display the visualization
+    """
     if not show:
         return
     overlay = image.copy()
@@ -296,7 +391,14 @@ def visualize_features(image, features, edges, bbox, inner_region, thicknesses, 
     plt.tight_layout()
     plt.show()
 
-def test_feature_extraction(input_dir="ENSF 544\\Final-Project\\data\\processed", test_first_only=TEST_FIRST_ONLY, visualize=SHOW_VISUALIZATION):
+def test_feature_extraction(input_dir=os.path.join("data", "processed"), test_first_only=TEST_FIRST_ONLY, visualize=SHOW_VISUALIZATION):
+    """Test feature extraction on images in the input directory.
+    
+    Args:
+        input_dir (str): Directory containing processed images
+        test_first_only (bool): Whether to test only the first image in each folder
+        visualize (bool): Whether to show visualizations
+    """
     abs_input_dir = os.path.abspath(input_dir)
     grade_folders = [os.path.join(abs_input_dir, f) for f in os.listdir(abs_input_dir)
                      if os.path.isdir(os.path.join(abs_input_dir, f))]
@@ -319,16 +421,12 @@ def test_feature_extraction(input_dir="ENSF 544\\Final-Project\\data\\processed"
             logger.info(f"{img_path} -> Features: {features}, Valid Mask: {valid_mask}")
             visualize_features(image, features, edges, bbox, inner_region, thicknesses, yellow_mask, grade_label, show=visualize)
 
-def save_feature_dataset(input_dir="ENSF 544\\Final-Project\\data\\processed", output_file="ENSF 544\\Final-Project\\data\\features\\features.npy.npz"):
-    """
-    For a 4-class setup:
-      - 0 => All grades <= 7
-      - 1 => Grade 8
-      - 2 => Grade 9
-      - 3 => Grade 10
-    Our feature vector now has 7 dimensions.
-    After creating X and valid_masks, we clean the feature matrix by removing any column
-    for which less than 30% of samples have a valid (original) value.
+def save_feature_dataset(input_dir=os.path.join("data", "processed"), output_file=os.path.join("data", "features", "features.npy.npz")):
+    """Save extracted features to a compressed numpy file.
+    
+    Args:
+        input_dir (str): Directory containing processed images
+        output_file (str): Path to save the feature dataset
     """
     X_list, valid_mask_list, y_list = [], [], []
     abs_input_dir = os.path.abspath(input_dir)
@@ -342,7 +440,7 @@ def save_feature_dataset(input_dir="ENSF 544\\Final-Project\\data\\processed", o
             logger.warning(f"Could not parse grade from {folder}: {e}")
             continue
         
-        # 4-class logic:
+        # Convert numeric grades to class labels
         if grade_num <= 7:
             label = 0
         elif grade_num == 8:
@@ -355,6 +453,7 @@ def save_feature_dataset(input_dir="ENSF 544\\Final-Project\\data\\processed", o
             logger.warning(f"Grade {grade_num} not in [<=7,8,9,10]; skipping.")
             continue
         
+        # Process images in the folder
         img_files = sorted(glob(os.path.join(folder, "*.jpg")))
         logger.info(f"Extracting from {len(img_files)} images in {folder} => label={label}")
         for img_path in img_files:
@@ -376,20 +475,16 @@ def save_feature_dataset(input_dir="ENSF 544\\Final-Project\\data\\processed", o
             valid_mask_list.append(valid_mask)
             y_list.append(label)
     
+    # Convert lists to numpy arrays
     X = np.array(X_list, dtype=float)
     valid_masks = np.array([vm if len(vm)==7 else [False]*7 for vm in valid_mask_list], dtype=bool)
     y = np.array(y_list, dtype=int)
     
+    # Clean the feature matrix
     cleaned_X, keep_indices = clean_feature_matrix(X, valid_masks, threshold=0.3)
     logger.info(f"After cleaning, kept feature columns: {keep_indices}")
     
+    # Save the dataset
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     np.savez_compressed(output_file, X=cleaned_X, y=y)
     logger.info(f"Saved dataset to {output_file}: X.shape={cleaned_X.shape}, y.shape={y.shape}")
-
-if __name__ == "__main__":
-    # For testing and visualization:
-    # test_feature_extraction("ENSF 544\\Final-Project\\data\\processed", test_first_only=TEST_FIRST_ONLY, visualize=SHOW_VISUALIZATION)
-    
-    # To save the dataset with cleaning:
-    save_feature_dataset(input_dir="ENSF 544\\Final-Project\\data\\processed", output_file="ENSF 544\\Final-Project\\data\\features\\features.npy.npz")
